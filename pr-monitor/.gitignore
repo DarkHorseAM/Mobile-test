@@ -1,19 +1,12 @@
-__pycache__/
-*.py[cod]
-*$py.class
-.venv/
-venv/
-env/
+node_modules/
+.next/
+out/
 .env
-.envrc
-
-# Local data — never check the live DB into git
-data/*.db
-data/*.db-journal
-data/*.db-wal
-data/*.db-shm
-
-# IDE / OS
-.idea/
-.vscode/
+.env*.local
+.vercel
+*.log
 .DS_Store
+next-env.d.ts
+tsconfig.tsbuildinfo
+drizzle/.snapshot
+.turbo

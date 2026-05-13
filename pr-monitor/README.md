@@ -1,149 +1,126 @@
 # PR Campaign Monitor
 
-A tool for digital PR professionals to scan UK news outlets, surface
-PR-originated coverage (surveys, "ranked" lists, "% of Brits" stats, expert
-quotes, etc.), and spot recurring angles, formats and named brands so the user
-can find inspiration for new campaigns.
+A web app that scans UK news outlets for likely PR-originated coverage, surfaces
+recurring angles and brand attributions, and helps a digital PR team spot
+campaign inspiration.
 
-This is **v1** — RSS-only, SQLite-backed, run on-demand or via cron, with a
-Streamlit UI.
+Built on Next.js 15 + Drizzle ORM + Neon Postgres, deployed on Vercel with a
+cron-triggered hourly scan.
 
-## What it does
+## Features
 
-1. Pulls articles from a configurable list of UK news RSS feeds.
-2. Runs each headline + RSS summary through a configurable set of regex
-   patterns that indicate PR origin (e.g. "according to research by",
-   "a new study", "% of Brits", "named the most…", "ranked").
-3. Tries to extract the named brand/source after phrases like
-   "research by X" or "study from Y".
-4. Stores everything in a local SQLite database, deduped by URL.
-5. Exposes a Streamlit UI with a **Browse** tab (filter, sort, export to CSV)
-   and a **Trends** tab (top brands, top patterns, top outlets, this-week vs
-   last-week deltas, headline word frequencies).
+- **Hourly scan** of configurable UK RSS feeds (Vercel Cron)
+- **Pattern matching** with editable regex indicators (e.g. "% of Brits",
+  "ranked", "according to research by")
+- **Brand extraction** from phrases like "a study by X" via regex with a
+  single capture group
+- **Browse** — filter by date / outlet / pattern / brand, full-text search,
+  CSV export
+- **Trends** — top brands, top patterns, top outlets, this-week-vs-last
+  pattern deltas, headline word frequencies
+- **Config UI** — add/disable feeds and patterns without touching code
+- **Team-only auth** via Auth.js v5: email magic-link (Resend) and/or
+  Google OAuth, gated by an email allowlist
 
-## Project layout
+## Stack
 
-```
-pr-monitor/
-├── config/
-│   ├── feeds.yaml          # RSS feeds to scan (user-editable)
-│   └── patterns.yaml       # PR-indicator phrases + brand-extraction regex
-├── pr_monitor/
-│   ├── __init__.py
-│   ├── scanner.py          # fetch + match + store
-│   ├── db.py               # SQLite schema and queries
-│   └── app.py              # Streamlit UI
-├── data/
-│   └── monitor.db          # created on first scan (git-ignored)
-├── requirements.txt
-└── README.md
-```
+| Layer       | Tech                                |
+| ----------- | ----------------------------------- |
+| Framework   | Next.js 15 (App Router, TypeScript) |
+| Database    | Neon (serverless Postgres)          |
+| ORM         | Drizzle + drizzle-kit               |
+| Auth        | Auth.js v5 with Drizzle adapter     |
+| Scheduling  | Vercel Cron                         |
+| RSS         | rss-parser                          |
+| UI          | Tailwind CSS + small in-house components |
 
-## Install
+## Setup
+
+### 1. Install
 
 ```bash
 cd pr-monitor
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+npm install
 ```
 
-## Run a scan
+### 2. Create a Neon database
+
+Free tier is fine. Copy the pooled connection string into `.env.local`:
 
 ```bash
-# default: reads config/feeds.yaml, config/patterns.yaml, writes data/monitor.db
-python -m pr_monitor.scanner
-
-# with overrides
-python -m pr_monitor.scanner \
-    --feeds config/feeds.yaml \
-    --patterns config/patterns.yaml \
-    --db data/monitor.db \
-    -v
+cp .env.example .env.local
+# then fill in DATABASE_URL
 ```
 
-### Scheduling via cron
-
-A scan every 30 minutes:
-
-```cron
-*/30 * * * * cd /path/to/pr-monitor && /path/to/.venv/bin/python -m pr_monitor.scanner >> data/scanner.log 2>&1
-```
-
-The scanner is safe to run repeatedly — articles are deduped by URL and
-matches are deduped by `(article, pattern)`.
-
-## Open the UI
+### 3. Push the schema and seed
 
 ```bash
-streamlit run pr_monitor/app.py
+npm run db:push      # creates tables in Neon
+npm run db:seed      # inserts ~20 UK feeds and ~30 patterns
 ```
 
-Then visit <http://localhost:8501>. The sidebar has a **Run scan now** button
-if you'd rather not use cron.
+### 4. Configure auth
 
-### Browse tab
+In `.env.local`, set `AUTH_SECRET` (`openssl rand -base64 32`) and **at least
+one** of:
 
-- Filter by date range, outlet, pattern, brand, and free-text search across
-  headlines & summaries.
-- Sortable table with direct links to each article.
-- One-click **Export to CSV** of the filtered view.
+- `AUTH_RESEND_KEY` + `AUTH_EMAIL_FROM` — email magic-link via Resend
+- `AUTH_GOOGLE_ID` + `AUTH_GOOGLE_SECRET` — Google OAuth
 
-### Trends tab
+Restrict access by listing emails in `ALLOWED_EMAILS` (comma-separated).
+Leave it blank and *anyone* who can authenticate is in — fine for a
+private staging deploy, not for production.
 
-- **Top brands** — most-named research sources in the date range.
-- **Top patterns** — which PR framings are getting the most coverage.
-- **Top outlets** — who's running the most PR-shaped pieces.
-- **This week vs last week** — pattern-level deltas to catch what's spiking.
-- **Headline word frequencies** — quick view of recurring nouns and themes.
+### 5. Run locally
 
-## Customising
-
-### Feeds
-
-Edit `config/feeds.yaml`. Each entry needs a `name` and `url`; `tier` is
-optional metadata stored alongside each article.
-
-```yaml
-feeds:
-  - name: Your Local Paper
-    url: https://example.co.uk/rss
-    tier: regional
+```bash
+npm run dev
 ```
 
-### Patterns
+Visit <http://localhost:3000>, sign in, and click **Run scan now** on the
+Browse page.
 
-Edit `config/patterns.yaml`. Two sections:
+## Deploying to Vercel
 
-- `indicators` — regex applied to `headline + summary`. Each match is stored
-  with a snippet of context. Patterns are case-insensitive.
-- `brand_extractors` — regex with one capture group; the group's value is
-  stored as the article's `brand`. The first matching extractor wins.
+1. Push this repo to GitHub.
+2. Import into Vercel.
+3. Add the same env vars from `.env.local` in the project settings. Also set
+   `AUTH_URL` to the deployed URL.
+4. Generate a `CRON_SECRET` and add it. Vercel Cron will automatically include
+   `Authorization: Bearer <CRON_SECRET>` on scheduled requests.
+5. Deploy. The cron in `vercel.json` runs `/api/scan` every hour on the hour.
 
-Restart the Streamlit app (or re-run the scanner) after changing patterns.
+## Daily-use workflow
+
+1. The hourly cron pulls articles from each active feed in `feeds`.
+2. For each article: headline + summary are tested against every active
+   `indicator` pattern. If at least one matches, the article is stored.
+3. Brand extractors are applied to the same text; the first capturing match
+   wins and is stored on the article row.
+4. The Browse page shows what was found; Trends shows what's spiking.
+5. Tune the patterns at `/config/patterns` and the feeds at `/config/feeds`
+   as your taste in PR-indicator phrases sharpens.
 
 ## Database
 
-SQLite, at `data/monitor.db`. Three tables:
+Schema in `lib/db/schema.ts`. Tables:
 
-- `articles` — one row per unique URL.
-- `matches` — one row per `(article_id, pattern_id)`.
-- `scan_runs` — history of scans for debugging and "last scan" display.
+- `feeds`, `patterns` — config
+- `articles` — one row per unique URL (`hidden` flag for soft-delete)
+- `matches` — article × pattern (unique pair)
+- `scan_runs` — debug history of each scan
+- `users`, `accounts`, `sessions`, `verificationTokens` — Auth.js
 
-Use any SQLite client (`sqlite3 data/monitor.db`) for ad-hoc queries.
+## Notes on false positives
 
-## Limitations (v1)
+The brief flagged that pattern matching will catch genuine academic citations
+as well as PR pitches. The schema includes a `hidden` boolean on `articles`
+so you can soft-delete obvious editorial coverage; an "Ignore brand"
+allowlist is a sensible next step but isn't in v1.
 
-- RSS only — no full-article scraping. Some outlets' RSS summaries are
-  truncated, so subtle PR framing may slip past pattern matching.
-- No sentiment, no NLP classification.
-- No link metrics or SEO data.
-- No tracking of campaigns the user owns (planned for a later mode).
-- No social media monitoring.
+## Out of scope for v1
 
-## Roadmap
-
-- Optional full-article fetch for outlets with thin summaries.
-- "My campaigns" mode — flag articles that mention a user-supplied brand.
-- Smarter brand extraction (NER) once the regex hit-rate plateaus.
-- Email/Slack digest of weekly highlights.
+- Full-article scraping
+- Sentiment / ML classification
+- Social listening
+- Tracking the user's own owned campaigns
