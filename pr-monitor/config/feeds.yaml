@@ -1,0 +1,72 @@
+# UK news RSS feeds to scan.
+# Edit freely — name is for display, url must point to a valid RSS/Atom feed.
+# Tier groupings are advisory only (not used by the scanner).
+
+feeds:
+  # National tabloids
+  - name: Daily Mail
+    url: https://www.dailymail.co.uk/articles.rss
+    tier: tabloid
+  - name: The Sun
+    url: https://www.thesun.co.uk/feed/
+    tier: tabloid
+  - name: Daily Mirror
+    url: https://www.mirror.co.uk/?service=rss
+    tier: tabloid
+  - name: Daily Express
+    url: https://www.express.co.uk/posts/rss/1
+    tier: tabloid
+  - name: Metro
+    url: https://metro.co.uk/feed/
+    tier: tabloid
+  - name: Daily Star
+    url: https://www.dailystar.co.uk/?service=rss
+    tier: tabloid
+
+  # National broadsheets
+  - name: The Guardian
+    url: https://www.theguardian.com/uk/rss
+    tier: broadsheet
+  - name: The Telegraph
+    url: https://www.telegraph.co.uk/rss.xml
+    tier: broadsheet
+  - name: The Times
+    url: https://www.thetimes.co.uk/rss
+    tier: broadsheet
+  - name: The Independent
+    url: https://www.independent.co.uk/news/uk/rss
+    tier: broadsheet
+  - name: i News
+    url: https://inews.co.uk/feed
+    tier: broadsheet
+  - name: Financial Times (UK)
+    url: https://www.ft.com/rss/uk
+    tier: broadsheet
+
+  # Broadcasters
+  - name: BBC News (UK)
+    url: https://feeds.bbci.co.uk/news/uk/rss.xml
+    tier: broadcaster
+  - name: BBC News (Business)
+    url: https://feeds.bbci.co.uk/news/business/rss.xml
+    tier: broadcaster
+  - name: Sky News (UK)
+    url: https://feeds.skynews.com/feeds/rss/uk.xml
+    tier: broadcaster
+  - name: ITV News
+    url: https://www.itv.com/news/index.rss
+    tier: broadcaster
+
+  # Regional / lifestyle
+  - name: Manchester Evening News
+    url: https://www.manchestereveningnews.co.uk/?service=rss
+    tier: regional
+  - name: Liverpool Echo
+    url: https://www.liverpoolecho.co.uk/?service=rss
+    tier: regional
+  - name: Birmingham Live
+    url: https://www.birminghammail.co.uk/?service=rss
+    tier: regional
+  - name: Evening Standard
+    url: https://www.standard.co.uk/rss
+    tier: regional

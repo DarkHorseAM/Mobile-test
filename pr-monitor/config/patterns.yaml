@@ -1,0 +1,114 @@
+# Pattern config for the PR Campaign Monitor.
+#
+# Two kinds of patterns:
+#  - indicators: phrases that suggest the article is built around PR-supplied
+#    research, a survey, a data drop, or a "named/ranked" listicle.
+#    Matched as case-insensitive regex against headline + summary.
+#  - brand_extractors: regex with a single capture group that should yield the
+#    brand or source named in phrases like "according to research by X".
+#    The first capturing pattern that matches wins.
+
+indicators:
+  # Survey / research framing
+  - id: research_by
+    label: "Research by [brand]"
+    regex: "\\baccording to (?:new |recent |fresh )?research(?: by)?\\b"
+  - id: study_by
+    label: "Study by [brand]"
+    regex: "\\b(?:a |new )?stud(?:y|ies) (?:by|from|conducted by)\\b"
+  - id: new_study
+    label: "A new study"
+    regex: "\\ba new study\\b"
+  - id: survey_finds
+    label: "Survey finds"
+    regex: "\\b(?:survey|poll|research) (?:finds|reveals|shows|suggests|claims|warns)\\b"
+  - id: data_reveals
+    label: "Data reveals"
+    regex: "\\bdata (?:reveals|shows|suggests|finds)\\b"
+  - id: report_finds
+    label: "Report finds"
+    regex: "\\b(?:a |new |latest )?report (?:finds|reveals|shows|claims)\\b"
+  - id: experts_say
+    label: "Experts say / warn"
+    regex: "\\bexperts? (?:say|warn|reveal|claim)\\b"
+  - id: scientists_reveal
+    label: "Scientists reveal"
+    regex: "\\bscientists? (?:say|reveal|warn|claim|find)\\b"
+
+  # "% of Brits" style stat hooks
+  - id: percent_of_brits
+    label: "% of Brits"
+    regex: "\\b\\d{1,3}\\s?%(?:[^\\n]{0,30})\\b(?:brits|britons|brits?|adults|people|uk(?:ers)?|parents|workers|women|men)\\b"
+  - id: x_in_y
+    label: "X in Y (e.g. 1 in 5)"
+    regex: "\\b\\d{1,2} in \\d{1,2}\\b"
+  - id: average_brit
+    label: "Average Brit"
+    regex: "\\bthe average (?:brit|briton|adult|person|uk\\b)"
+
+  # Ranked / named / superlative listicles
+  - id: ranked
+    label: "Ranked"
+    regex: "\\b(?:ranked|ranking)\\b"
+  - id: named_most
+    label: "Named the most/least"
+    regex: "\\bnamed (?:the )?(?:most|least|best|worst)\\b"
+  - id: revealed_best_worst
+    label: "Revealed: best/worst"
+    regex: "\\brevealed[:\\s].{0,40}\\b(?:best|worst|top|bottom|most|least)\\b"
+  - id: top_n
+    label: "Top N list"
+    regex: "\\btop \\d{1,3}\\b"
+  - id: cheapest_most_expensive
+    label: "Cheapest / most expensive"
+    regex: "\\b(?:cheapest|most expensive|priciest|most affordable)\\b"
+  - id: happiest_unhappiest
+    label: "Happiest / unhappiest"
+    regex: "\\b(?:happiest|unhappiest|loneliest|friendliest|rudest|politest)\\b"
+
+  # Time / location framing common in PR
+  - id: best_place_to
+    label: "Best place to..."
+    regex: "\\bbest (?:place|city|town|country|street|postcode) (?:to|for|in)\\b"
+  - id: most_y_for_z
+    label: "Most Y for Z"
+    regex: "\\b(?:the )?most \\w+ (?:place|city|town|country|area|street) (?:to|for|in)\\b"
+
+  # Money / cost-of-living framing
+  - id: costs_uk_average
+    label: "Average cost / spend"
+    regex: "\\b(?:the )?average (?:cost|spend|salary|earnings|household)\\b"
+  - id: how_much_save
+    label: "How much you could save"
+    regex: "\\bhow much (?:you could|brits|britons|households) (?:save|spend|earn|pay)\\b"
+
+  # Trend / Google search hooks
+  - id: google_searches
+    label: "Google searches"
+    regex: "\\b(?:google )?searches? (?:for|spike|surge|jump|up)\\b"
+  - id: tiktok_trend
+    label: "TikTok / viral trend"
+    regex: "\\b(?:tiktok|viral) (?:trend|hack|recipe|craze)\\b"
+
+  # Calendar PR hooks
+  - id: this_summer_winter
+    label: "Season hook"
+    regex: "\\b(?:this|in time for) (?:summer|winter|christmas|easter|halloween|valentine'?s|black friday)\\b"
+
+# Brand extraction — order matters; first match wins.
+# Each must define one capture group that yields the brand/source name.
+brand_extractors:
+  - id: research_by_brand
+    regex: "\\baccording to (?:new |recent |fresh )?research (?:by|from|conducted by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)"
+  - id: study_by_brand
+    regex: "\\b(?:a |new )?stud(?:y|ies) (?:by|from|conducted by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)"
+  - id: survey_by_brand
+    regex: "\\b(?:a |new )?(?:survey|poll) (?:by|from|conducted by|commissioned by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)"
+  - id: data_from_brand
+    regex: "\\b(?:data|figures|analysis) (?:from|by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)"
+  - id: experts_at_brand
+    regex: "\\bexperts? (?:at|from)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:say|said|warn|warned|reveal|revealed|claim|claimed)\\b|$)"
+  - id: report_by_brand
+    regex: "\\b(?:a |new |latest )?report (?:by|from|published by|commissioned by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)"
+  - id: commissioned_by_brand
+    regex: "\\bcommissioned by\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|$)"
