@@ -42,6 +42,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     verificationTokensTable: verificationTokens,
   }),
   providers,
+  trustHost: true,
   session: { strategy: "database" },
   pages: { signIn: "/signin" },
   callbacks: {
