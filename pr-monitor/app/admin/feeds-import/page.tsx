@@ -112,10 +112,10 @@ export default function FeedsImportPage() {
   const newCount = probed?.filter((r) => r.ok && !r.alreadyInDb).length ?? 0;
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-8 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-semibold">Import candidate feeds</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="font-sans font-bold text-3xl tracking-tight">Import Candidate Feeds</h1>
+        <p className="mt-1 text-sm text-muted">
           Probes the {FEED_CANDIDATES.length} candidate URLs in{" "}
           <code className="text-xs">lib/db/feed-candidates.ts</code> and
           reports which return parseable RSS. Nothing is written to the
@@ -134,26 +134,26 @@ export default function FeedsImportPage() {
 
       {probed && (
         <>
-          <Card className="p-0 overflow-hidden">
-            <div className="px-5 py-3 border-b text-sm text-muted-foreground">
+          <div className="bg-panel border border-rule overflow-hidden">
+            <div className="px-5 py-3 border-b border-rule text-xs font-sans font-medium uppercase tracking-label text-muted">
               {okCount} ok · {failCount} failed · {newCount} new to insert
             </div>
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left">
-                <tr>
-                  <th className="p-3">Outlet</th>
-                  <th className="p-3 w-20">Items</th>
-                  <th className="p-3 w-24">Status</th>
-                  <th className="p-3">Notes</th>
+            <table className="w-full text-sm font-mono">
+              <thead className="border-b border-rule">
+                <tr className="text-left">
+                  <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Outlet</th>
+                  <th className="p-3 w-20 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Items</th>
+                  <th className="p-3 w-24 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Status</th>
+                  <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Notes</th>
                 </tr>
               </thead>
               <tbody>
                 {probed.map((r) => (
-                  <tr key={r.url} className="border-t align-top">
+                  <tr key={r.url} className="border-t border-rule align-top hover:bg-paper transition-colors">
                     <td className="p-3">
-                      <div className="font-medium">{r.name}</div>
+                      <div className="font-sans font-medium">{r.name}</div>
                       <a
-                        className="text-xs text-muted-foreground hover:underline break-all"
+                        className="text-xs text-muted hover:text-accent hover:underline break-all"
                         href={r.url}
                         target="_blank"
                         rel="noreferrer"
@@ -163,21 +163,20 @@ export default function FeedsImportPage() {
                     </td>
                     <td className="p-3 tabular-nums">{r.itemCount}</td>
                     <td className="p-3">
-                      {r.alreadyInDb ? (
-                        <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700">
-                          DUP
-                        </span>
-                      ) : r.ok ? (
-                        <span className="text-xs font-mono px-2 py-0.5 rounded bg-green-100 text-green-800">
-                          OK
-                        </span>
-                      ) : (
-                        <span className="text-xs font-mono px-2 py-0.5 rounded bg-red-100 text-red-800">
-                          FAIL
-                        </span>
-                      )}
+                      <span
+                        className={
+                          "text-[10px] font-sans font-medium uppercase tracking-label px-2 py-0.5 border " +
+                          (r.alreadyInDb
+                            ? "border-rule text-muted bg-panel"
+                            : r.ok
+                              ? "border-rule text-ink bg-panel"
+                              : "border-accent text-accent bg-panel")
+                        }
+                      >
+                        {r.alreadyInDb ? "DUP" : r.ok ? "OK" : "FAIL"}
+                      </span>
                     </td>
-                    <td className="p-3 text-xs text-muted-foreground">
+                    <td className="p-3 text-xs text-muted">
                       {r.alreadyInDb && (
                         <div>URL already in feeds table — will skip.</div>
                       )}
@@ -187,14 +186,14 @@ export default function FeedsImportPage() {
                         </div>
                       )}
                       {r.error && (
-                        <div className="text-red-700 font-mono">{r.error}</div>
+                        <div className="text-accent">{r.error}</div>
                       )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </Card>
+          </div>
 
           {newCount > 0 && !applied && (
             <Card>
@@ -203,7 +202,7 @@ export default function FeedsImportPage() {
                   Add {newCount} working feed{newCount === 1 ? "" : "s"} to
                   database
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-xs text-muted mt-2">
                   Inserts as <code>is_active = true</code>. Existing feeds in
                   the database are untouched.
                 </p>
@@ -215,8 +214,8 @@ export default function FeedsImportPage() {
 
       {applied && (
         <Card>
-          <h2 className="font-medium mb-2">Applied</h2>
-          <p className="text-sm text-muted-foreground mb-3">
+          <h2 className="text-[11px] font-sans font-medium uppercase tracking-label text-muted mb-2">Applied</h2>
+          <p className="text-sm text-muted mb-3">
             {applied.filter((a) => a.inserted).length} of {applied.length}{" "}
             inserted. (Any not inserted hit a unique-URL conflict and were
             silently skipped.)
@@ -226,10 +225,10 @@ export default function FeedsImportPage() {
               <li key={a.url}>
                 <span
                   className={
-                    "inline-block min-w-12 text-xs font-mono px-2 py-0.5 rounded mr-2 " +
+                    "inline-block min-w-12 text-[10px] font-sans font-medium uppercase tracking-label px-2 py-0.5 border mr-2 " +
                     (a.inserted
-                      ? "bg-green-100 text-green-800"
-                      : "bg-slate-100 text-slate-700")
+                      ? "border-rule text-ink bg-panel"
+                      : "border-rule text-muted bg-panel")
                   }
                 >
                   {a.inserted ? "NEW" : "SKIP"}

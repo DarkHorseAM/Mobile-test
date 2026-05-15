@@ -17,10 +17,13 @@ export function Button({
     <button
       {...props}
       className={cn(
-        "inline-flex items-center justify-center rounded-md text-sm font-medium px-3 py-2 transition disabled:opacity-50 disabled:pointer-events-none",
-        variant === "default" && "bg-slate-900 text-white hover:bg-slate-800",
-        variant === "outline" && "border border-slate-300 hover:bg-slate-50",
-        variant === "ghost" && "hover:bg-slate-100",
+        "inline-flex items-center justify-center px-4 py-2 text-xs font-sans font-medium uppercase tracking-label transition-colors disabled:opacity-50 disabled:pointer-events-none border",
+        variant === "default" &&
+          "bg-accent text-white border-accent hover:bg-accent-hover hover:border-accent-hover",
+        variant === "outline" &&
+          "bg-panel text-ink border-rule hover:border-accent",
+        variant === "ghost" &&
+          "bg-transparent text-ink border-transparent hover:text-accent",
         className,
       )}
     />
@@ -35,7 +38,7 @@ export function Input({
     <input
       {...props}
       className={cn(
-        "h-9 w-full rounded-md border border-slate-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400",
+        "h-9 w-full bg-panel border border-rule px-3 text-sm font-mono text-ink placeholder:text-muted focus:border-accent focus:outline-none",
         className,
       )}
     />
@@ -49,10 +52,7 @@ export function Card({
   return (
     <div
       {...props}
-      className={cn(
-        "rounded-lg border border-slate-200 bg-white p-5 shadow-sm",
-        className,
-      )}
+      className={cn("bg-panel border border-rule p-5", className)}
     />
   );
 }
@@ -64,7 +64,10 @@ export function Label({
   return (
     <label
       {...props}
-      className={cn("text-xs font-medium text-slate-700", className)}
+      className={cn(
+        "block mb-1 text-[11px] font-sans font-medium uppercase tracking-label text-muted",
+        className,
+      )}
     />
   );
 }
@@ -77,7 +80,7 @@ export function Badge({
     <span
       {...props}
       className={cn(
-        "inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700",
+        "inline-flex items-center border border-rule bg-panel px-2 py-0.5 text-[10px] font-sans font-medium uppercase tracking-label text-ink",
         className,
       )}
     />

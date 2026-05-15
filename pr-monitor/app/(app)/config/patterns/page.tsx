@@ -43,10 +43,10 @@ export default async function PatternsConfigPage() {
   const brandExtractors = rows.filter((r) => r.kind === "brand");
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">Patterns</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="font-sans font-bold text-3xl tracking-tight">Patterns</h1>
+        <p className="mt-1 text-sm text-muted">
           Regex applied to headline + summary. Indicators flag PR shape; brand extractors pull the source name from the first capture group.
         </p>
       </div>
@@ -67,7 +67,11 @@ export default async function PatternsConfigPage() {
           </div>
           <div>
             <Label htmlFor="kind">Kind</Label>
-            <select id="kind" name="kind" className="h-9 w-full rounded-md border border-slate-300 px-2 text-sm">
+            <select
+              id="kind"
+              name="kind"
+              className="h-9 w-full bg-panel border border-rule px-2 text-sm font-mono text-ink focus:border-accent focus:outline-none"
+            >
               <option value="indicator">indicator</option>
               <option value="brand">brand</option>
             </select>
@@ -96,27 +100,37 @@ function Section({
   remove: (fd: FormData) => Promise<void>;
 }) {
   return (
-    <Card className="p-0 overflow-hidden">
-      <div className="p-4 border-b font-semibold flex items-center gap-2">
-        {title} <Badge>{rows.length}</Badge>
+    <div className="bg-panel border border-rule overflow-hidden">
+      <div className="px-4 py-3 border-b border-rule flex items-center gap-3">
+        <span className="text-[11px] font-sans font-medium uppercase tracking-label text-ink">{title}</span>
+        <Badge>{rows.length}</Badge>
       </div>
-      <table className="w-full text-sm">
-        <thead className="bg-slate-50 text-left">
-          <tr>
-            <th className="p-3 w-44">Slug</th>
-            <th className="p-3 w-60">Label</th>
-            <th className="p-3">Regex</th>
-            <th className="p-3 w-24">Status</th>
+      <table className="w-full text-sm font-mono">
+        <thead className="border-b border-rule">
+          <tr className="text-left">
+            <th className="p-3 w-44 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Slug</th>
+            <th className="p-3 w-60 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Label</th>
+            <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Regex</th>
+            <th className="p-3 w-24 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Status</th>
             <th className="p-3 w-40"></th>
           </tr>
         </thead>
         <tbody>
           {rows.map((p) => (
-            <tr key={p.id} className="border-t">
-              <td className="p-3 font-mono text-xs">{p.slug}</td>
+            <tr key={p.id} className="border-t border-rule hover:bg-paper transition-colors">
+              <td className="p-3 text-xs">{p.slug}</td>
               <td className="p-3">{p.label}</td>
-              <td className="p-3 font-mono text-xs text-muted-foreground truncate max-w-md">{p.regex}</td>
-              <td className="p-3">{p.isActive ? "Active" : "Off"}</td>
+              <td className="p-3 text-xs text-muted truncate max-w-md">{p.regex}</td>
+              <td className="p-3">
+                <span
+                  className={
+                    "text-[10px] font-sans font-medium uppercase tracking-label " +
+                    (p.isActive ? "text-ink" : "text-muted")
+                  }
+                >
+                  {p.isActive ? "Active" : "Off"}
+                </span>
+              </td>
               <td className="p-3 flex gap-2">
                 <form action={toggle}>
                   <input type="hidden" name="id" value={p.id} />
@@ -136,6 +150,6 @@ function Section({
           ))}
         </tbody>
       </table>
-    </Card>
+    </div>
   );
 }

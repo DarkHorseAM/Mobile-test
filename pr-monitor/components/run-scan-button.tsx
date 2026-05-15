@@ -54,13 +54,15 @@ export function RunScanButton() {
         )}
       </Button>
       {result && (
-        <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-sm w-80 text-left">
-          <div className="font-medium">
-            Scan complete — {result.articlesNew} new article
-            {result.articlesNew === 1 ? "" : "s"}, {result.matchesNew} new match
-            {result.matchesNew === 1 ? "" : "es"}
+        <div className="border border-rule bg-panel p-3 text-sm w-80 text-left font-mono">
+          <div className="font-sans font-medium uppercase tracking-label text-[11px] text-muted">
+            Scan complete
           </div>
-          <div className="text-xs text-muted-foreground mt-1">
+          <div className="mt-1">
+            {result.articlesNew} new article{result.articlesNew === 1 ? "" : "s"},{" "}
+            {result.matchesNew} new match{result.matchesNew === 1 ? "" : "es"}
+          </div>
+          <div className="text-xs text-muted mt-1">
             {result.feedsScanned} feed{result.feedsScanned === 1 ? "" : "s"} scanned,{" "}
             {result.articlesSeen} article{result.articlesSeen === 1 ? "" : "s"} seen
           </div>
@@ -68,17 +70,20 @@ export function RunScanButton() {
             <div className="mt-2">
               <button
                 type="button"
-                className="text-xs underline"
+                className="text-[11px] font-sans font-medium uppercase tracking-label text-ink hover:text-accent"
                 onClick={() => setShowErrors((s) => !s)}
               >
                 {showErrors ? "Hide" : "Show"} {result.errors.length} feed error
                 {result.errors.length === 1 ? "" : "s"}
               </button>
               {showErrors && (
-                <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+                <ul className="mt-1 space-y-1 text-xs text-muted">
                   {result.errors.map((e, i) => (
                     <li key={i}>
-                      <span className="font-medium">{e.feed}:</span> {e.message}
+                      <span className="font-sans font-medium uppercase tracking-label text-[10px] text-ink">
+                        {e.feed}:
+                      </span>{" "}
+                      {e.message}
                     </li>
                   ))}
                 </ul>
@@ -88,7 +93,7 @@ export function RunScanButton() {
         </div>
       )}
       {error && (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 w-80 text-left">
+        <div className="border border-accent bg-panel p-3 text-sm w-80 text-left font-mono text-accent">
           {error}
         </div>
       )}
