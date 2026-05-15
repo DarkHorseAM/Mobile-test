@@ -142,7 +142,7 @@ export default async function BrowsePage({
       </Card>
 
       <div className="bg-panel border border-rule overflow-hidden">
-        <table className="w-full text-sm font-mono">
+        <table className="w-full table-fixed text-sm font-mono">
           <thead className="border-b border-rule">
             <tr className="text-left">
               <th className="p-3 w-24 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Date</th>
@@ -166,14 +166,14 @@ export default async function BrowsePage({
                 <td className="p-3 text-muted whitespace-nowrap">
                   {r.publishedAt ? new Date(r.publishedAt).toISOString().slice(0, 10) : "—"}
                 </td>
-                <td className="p-3 whitespace-nowrap">{r.outlet}</td>
-                <td className="p-3">
+                <td className="p-3 truncate">{r.outlet}</td>
+                <td className="p-3 break-words">
                   <a className="hover:text-accent hover:underline" href={r.url} target="_blank" rel="noreferrer">
                     {r.headline}
                   </a>
-                  {r.summary && <div className="text-xs text-muted mt-1 line-clamp-2">{r.summary}</div>}
+                  {r.summary && <div className="text-xs text-muted mt-1 line-clamp-2 break-words">{r.summary}</div>}
                 </td>
-                <td className="p-3">{r.brand ?? <span className="text-muted">—</span>}</td>
+                <td className="p-3 truncate">{r.brand ?? <span className="text-muted">—</span>}</td>
                 <td className="p-3">
                   <div className="flex flex-wrap gap-1">
                     {(matchMap.get(r.id) ?? []).map((m) => (
