@@ -18,8 +18,6 @@ type SP = {
   from?: string;
   to?: string;
   page?: string;
-  sort?: string;
-  minConfidence?: string;
 };
 
 function toArray(v: string | string[] | undefined): string[] {
@@ -38,8 +36,6 @@ export default async function BrowsePage({
 
   const outlets = toArray(sp.outlet);
   const patternSlugs = toArray(sp.pattern);
-  const sort: "date" | "confidence" = sp.sort === "confidence" ? "confidence" : "date";
-  const minConfidence = sp.minConfidence ? Math.max(0, Number(sp.minConfidence) || 0) : 0;
 
   const [{ rows, total }, allFeeds, allPatterns] = await Promise.all([
     listArticles({
@@ -49,8 +45,6 @@ export default async function BrowsePage({
       brand: sp.brand,
       from: sp.from ? new Date(sp.from) : undefined,
       to: sp.to ? new Date(sp.to + "T23:59:59Z") : undefined,
-      minConfidence,
-      sort,
       limit: pageSize,
       offset: (page - 1) * pageSize,
     }),
@@ -60,17 +54,6 @@ export default async function BrowsePage({
 
   const matchMap = await getArticleMatches(rows.map((r) => r.id));
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
-
-  const sortToggleParams = new URLSearchParams();
-  if (sp.q) sortToggleParams.set("q", sp.q);
-  if (sp.brand) sortToggleParams.set("brand", sp.brand);
-  if (sp.from) sortToggleParams.set("from", sp.from);
-  if (sp.to) sortToggleParams.set("to", sp.to);
-  if (minConfidence > 0) sortToggleParams.set("minConfidence", String(minConfidence));
-  outlets.forEach((o) => sortToggleParams.append("outlet", o));
-  patternSlugs.forEach((s) => sortToggleParams.append("pattern", s));
-  if (sort === "date") sortToggleParams.set("sort", "confidence");
-  const sortToggleHref = `/browse?${sortToggleParams.toString()}`;
 
   const exportHref = `/api/export?${new URLSearchParams({
     ...(sp.q ? { q: sp.q } : {}),
@@ -102,7 +85,7 @@ export default async function BrowsePage({
             <Label htmlFor="q">Search headline / summary</Label>
             <Input id="q" name="q" defaultValue={sp.q ?? ""} placeholder="e.g. sleep, holiday, salary" />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <Label htmlFor="brand">Brand</Label>
             <Input id="brand" name="brand" defaultValue={sp.brand ?? ""} />
           </div>
@@ -114,18 +97,6 @@ export default async function BrowsePage({
             <Label htmlFor="to">To</Label>
             <Input id="to" name="to" type="date" defaultValue={sp.to ?? ""} />
           </div>
-          <div>
-            <Label htmlFor="minConfidence">Min confidence</Label>
-            <Input
-              id="minConfidence"
-              name="minConfidence"
-              type="number"
-              min={0}
-              defaultValue={minConfidence > 0 ? String(minConfidence) : ""}
-              placeholder="0"
-            />
-          </div>
-          {sort === "confidence" && <input type="hidden" name="sort" value="confidence" />}
           <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <Label>Outlets</Label>
@@ -178,25 +149,13 @@ export default async function BrowsePage({
               <th className="p-3 w-40 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Outlet</th>
               <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Headline</th>
               <th className="p-3 w-40 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Brand</th>
-              <th className="p-3 w-24 text-[11px] font-sans font-medium uppercase tracking-label text-muted">
-                <Link
-                  href={sortToggleHref}
-                  className={
-                    "inline-flex items-center gap-1 hover:text-accent " +
-                    (sort === "confidence" ? "text-accent" : "")
-                  }
-                >
-                  Confidence
-                  <span aria-hidden>{sort === "confidence" ? "↓" : "↕"}</span>
-                </Link>
-              </th>
               <th className="p-3 w-56 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Patterns</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td className="p-8 text-center text-muted" colSpan={6}>
+                <td className="p-8 text-center text-muted" colSpan={5}>
                   <span className="font-display text-2xl text-ink">nothing yet</span>
                   <div className="mt-1 text-sm">No articles match. Try running a scan or relaxing your filters.</div>
                 </td>
@@ -215,7 +174,6 @@ export default async function BrowsePage({
                   {r.summary && <div className="text-xs text-muted mt-1 line-clamp-2">{r.summary}</div>}
                 </td>
                 <td className="p-3">{r.brand ?? <span className="text-muted">—</span>}</td>
-                <td className="p-3 tabular-nums">{r.confidenceScore}</td>
                 <td className="p-3">
                   <div className="flex flex-wrap gap-1">
                     {(matchMap.get(r.id) ?? []).map((m) => (
@@ -253,8 +211,6 @@ function Pagination({
     if (sp.brand) params.set("brand", sp.brand);
     if (sp.from) params.set("from", sp.from);
     if (sp.to) params.set("to", sp.to);
-    if (sp.minConfidence) params.set("minConfidence", sp.minConfidence);
-    if (sp.sort) params.set("sort", sp.sort);
     toArray(sp.outlet).forEach((o) => params.append("outlet", o));
     toArray(sp.pattern).forEach((s) => params.append("pattern", s));
     params.set("page", String(p));

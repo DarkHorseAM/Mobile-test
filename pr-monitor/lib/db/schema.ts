@@ -40,7 +40,6 @@ export const articles = pgTable(
     publishedAt: timestamp("published_at", { withTimezone: true }),
     scannedAt: timestamp("scanned_at", { withTimezone: true }).notNull().defaultNow(),
     hidden: boolean("hidden").notNull().default(false),
-    confidenceScore: integer("confidence_score").notNull().default(0),
   },
   (t) => ({
     urlIdx: uniqueIndex("articles_url_idx").on(t.url),
