@@ -34,10 +34,10 @@ async function deleteFeed(formData: FormData) {
 export default async function FeedsConfigPage() {
   const rows = await db.select().from(feeds).orderBy(feeds.name);
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">Feeds</h1>
-        <p className="text-sm text-muted-foreground">RSS sources scanned every hour.</p>
+        <h1 className="font-sans font-bold text-3xl tracking-tight">Manage Feeds</h1>
+        <p className="mt-1 text-sm text-muted">RSS sources scanned every morning at 7am UTC.</p>
       </div>
 
       <Card>
@@ -60,28 +60,37 @@ export default async function FeedsConfigPage() {
         </form>
       </Card>
 
-      <Card className="p-0 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left">
-            <tr>
-              <th className="p-3">Name</th>
-              <th className="p-3">URL</th>
-              <th className="p-3 w-28">Tier</th>
-              <th className="p-3 w-32">Status</th>
+      <div className="bg-panel border border-rule overflow-hidden">
+        <table className="w-full text-sm font-mono">
+          <thead className="border-b border-rule">
+            <tr className="text-left">
+              <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Name</th>
+              <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">URL</th>
+              <th className="p-3 w-28 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Tier</th>
+              <th className="p-3 w-32 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Status</th>
               <th className="p-3 w-40"></th>
             </tr>
           </thead>
           <tbody>
             {rows.map((f) => (
-              <tr key={f.id} className="border-t">
+              <tr key={f.id} className="border-t border-rule hover:bg-paper transition-colors">
                 <td className="p-3">{f.name}</td>
-                <td className="p-3 text-muted-foreground truncate max-w-xs">
-                  <a href={f.url} target="_blank" rel="noreferrer" className="hover:underline">
+                <td className="p-3 text-muted truncate max-w-xs">
+                  <a href={f.url} target="_blank" rel="noreferrer" className="hover:text-accent hover:underline">
                     {f.url}
                   </a>
                 </td>
-                <td className="p-3">{f.tier ?? "—"}</td>
-                <td className="p-3">{f.isActive ? "Active" : "Disabled"}</td>
+                <td className="p-3 text-muted">{f.tier ?? "—"}</td>
+                <td className="p-3">
+                  <span
+                    className={
+                      "text-[10px] font-sans font-medium uppercase tracking-label " +
+                      (f.isActive ? "text-ink" : "text-muted")
+                    }
+                  >
+                    {f.isActive ? "Active" : "Disabled"}
+                  </span>
+                </td>
                 <td className="p-3 flex gap-2">
                   <form action={toggleFeed}>
                     <input type="hidden" name="id" value={f.id} />
@@ -101,7 +110,7 @@ export default async function FeedsConfigPage() {
             ))}
           </tbody>
         </table>
-      </Card>
+      </div>
     </div>
   );
 }

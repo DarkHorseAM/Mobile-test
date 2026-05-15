@@ -18,10 +18,10 @@ async function apply() {
 export default function MigratePage() {
   const steps = STORE.last;
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-8 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-semibold">Database migration</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="font-sans font-bold text-3xl tracking-tight">Database Migration</h1>
+        <p className="mt-1 text-sm text-muted">
           One-time setup for the refinement pass: adds the confidence_score column,
           creates the url_blocklist table with sport defaults, and deactivates the
           retired Season hook pattern. All steps are idempotent — safe to re-run.
@@ -36,14 +36,16 @@ export default function MigratePage() {
 
       {steps && (
         <Card>
-          <h2 className="font-medium mb-3">Last run</h2>
+          <h2 className="text-[11px] font-sans font-medium uppercase tracking-label text-muted mb-3">Last run</h2>
           <ul className="space-y-2 text-sm">
             {steps.map((s, i) => (
               <li key={i} className="flex items-start gap-3">
                 <span
                   className={
-                    "inline-block min-w-12 text-xs font-mono px-2 py-0.5 rounded " +
-                    (s.ok ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800")
+                    "inline-block min-w-12 text-[10px] font-sans font-medium uppercase tracking-label px-2 py-0.5 border " +
+                    (s.ok
+                      ? "border-rule text-ink bg-panel"
+                      : "border-accent text-accent bg-panel")
                   }
                 >
                   {s.ok ? "OK" : "ERR"}
@@ -51,15 +53,15 @@ export default function MigratePage() {
                 <div className="flex-1">
                   <div>{s.step}</div>
                   {s.error && (
-                    <div className="text-xs text-red-700 font-mono mt-1">{s.error}</div>
+                    <div className="text-xs text-accent mt-1">{s.error}</div>
                   )}
                 </div>
               </li>
             ))}
           </ul>
-          <p className="text-xs text-muted-foreground mt-4">
+          <p className="text-xs text-muted mt-4">
             All steps OK?{" "}
-            <Link href="/browse" className="underline">
+            <Link href="/browse" className="hover:text-accent hover:underline">
               Go to Browse
             </Link>{" "}
             and run a scan.

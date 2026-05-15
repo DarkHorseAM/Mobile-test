@@ -2,17 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Dark Horse fonts (self-hosted, no CDN) ---------- */
+
+@font-face {
+  font-family: "Lab Grotesque";
+  src: url("/fonts/LabGrotesque-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lab Grotesque";
+  src: url("/fonts/LabGrotesque-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lab Grotesque";
+  src: url("/fonts/LabGrotesque-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lab Grotesque";
+  src: url("/fonts/LabGrotesque-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PT Mono";
+  src: url("/fonts/PTMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PT Mono";
+  src: url("/fonts/PTMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "LateNights";
+  src: url("/fonts/LateNights-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Dark Horse palette ---------- */
+
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
+  --ink: #0a0a0a;
+  --paper: #fafaf7;
+  --panel: #ffffff;
+  --accent: #c90100;
+  --accent-hover: #e40100;
+  --muted: #666666;
+  --rule: #e5e3de;
 }
 
 html,
 body {
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "PT Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 400;
 }
 
 table {
   border-collapse: collapse;
+}
+
+/* Inputs / selects / textareas get the accent border on focus, no glow */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
 }

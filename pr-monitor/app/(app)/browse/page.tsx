@@ -82,11 +82,11 @@ export default async function BrowsePage({
   }).toString()}`;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-end justify-between">
+    <div className="space-y-8">
+      <div className="flex items-end justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-semibold">Browse</h1>
-          <p className="text-sm text-muted-foreground">{total.toLocaleString()} matching articles</p>
+          <h1 className="font-sans font-bold text-3xl tracking-tight">Browse Coverage</h1>
+          <p className="mt-1 text-sm text-muted">{total.toLocaleString()} matching articles</p>
         </div>
         <div className="flex gap-2">
           <a href={exportHref}>
@@ -133,7 +133,7 @@ export default async function BrowsePage({
                 name="outlet"
                 multiple
                 defaultValue={outlets}
-                className="w-full border border-slate-300 rounded-md p-2 text-sm h-28"
+                className="w-full bg-panel border border-rule p-2 text-sm font-mono text-ink h-28 focus:border-accent focus:outline-none"
               >
                 {allFeeds.map((f) => (
                   <option key={f.name} value={f.name}>
@@ -148,7 +148,7 @@ export default async function BrowsePage({
                 name="pattern"
                 multiple
                 defaultValue={patternSlugs}
-                className="w-full border border-slate-300 rounded-md p-2 text-sm h-28"
+                className="w-full bg-panel border border-rule p-2 text-sm font-mono text-ink h-28 focus:border-accent focus:outline-none"
               >
                 {allPatterns.map((p) => (
                   <option key={p.slug} value={p.slug}>
@@ -160,50 +160,61 @@ export default async function BrowsePage({
           </div>
           <div className="md:col-span-6 flex gap-2">
             <Button type="submit">Apply filters</Button>
-            <Link href="/browse" className="text-sm underline self-center">
+            <Link
+              href="/browse"
+              className="self-center text-[11px] font-sans font-medium uppercase tracking-label text-ink hover:text-accent"
+            >
               Reset
             </Link>
           </div>
         </form>
       </Card>
 
-      <Card className="p-0 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left">
-            <tr>
-              <th className="p-3 w-24">Date</th>
-              <th className="p-3 w-40">Outlet</th>
-              <th className="p-3">Headline</th>
-              <th className="p-3 w-40">Brand</th>
-              <th className="p-3 w-20">
-                <Link href={sortToggleHref} className="hover:underline">
-                  Confidence {sort === "confidence" ? "↓" : "↕"}
+      <div className="bg-panel border border-rule overflow-hidden">
+        <table className="w-full text-sm font-mono">
+          <thead className="border-b border-rule">
+            <tr className="text-left">
+              <th className="p-3 w-24 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Date</th>
+              <th className="p-3 w-40 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Outlet</th>
+              <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Headline</th>
+              <th className="p-3 w-40 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Brand</th>
+              <th className="p-3 w-24 text-[11px] font-sans font-medium uppercase tracking-label text-muted">
+                <Link
+                  href={sortToggleHref}
+                  className={
+                    "inline-flex items-center gap-1 hover:text-accent " +
+                    (sort === "confidence" ? "text-accent" : "")
+                  }
+                >
+                  Confidence
+                  <span aria-hidden>{sort === "confidence" ? "↓" : "↕"}</span>
                 </Link>
               </th>
-              <th className="p-3 w-56">Patterns</th>
+              <th className="p-3 w-56 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Patterns</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td className="p-6 text-center text-muted-foreground" colSpan={6}>
-                  No articles match. Try running a scan or relaxing your filters.
+                <td className="p-8 text-center text-muted" colSpan={6}>
+                  <span className="font-display text-2xl text-ink">nothing yet</span>
+                  <div className="mt-1 text-sm">No articles match. Try running a scan or relaxing your filters.</div>
                 </td>
               </tr>
             )}
             {rows.map((r) => (
-              <tr key={r.id} className="border-t">
-                <td className="p-3 text-muted-foreground whitespace-nowrap">
+              <tr key={r.id} className="border-t border-rule hover:bg-paper transition-colors">
+                <td className="p-3 text-muted whitespace-nowrap">
                   {r.publishedAt ? new Date(r.publishedAt).toISOString().slice(0, 10) : "—"}
                 </td>
                 <td className="p-3 whitespace-nowrap">{r.outlet}</td>
                 <td className="p-3">
-                  <a className="hover:underline" href={r.url} target="_blank" rel="noreferrer">
+                  <a className="hover:text-accent hover:underline" href={r.url} target="_blank" rel="noreferrer">
                     {r.headline}
                   </a>
-                  {r.summary && <div className="text-xs text-muted-foreground mt-1 line-clamp-2">{r.summary}</div>}
+                  {r.summary && <div className="text-xs text-muted mt-1 line-clamp-2">{r.summary}</div>}
                 </td>
-                <td className="p-3">{r.brand ?? <span className="text-muted-foreground">—</span>}</td>
+                <td className="p-3">{r.brand ?? <span className="text-muted">—</span>}</td>
                 <td className="p-3 tabular-nums">{r.confidenceScore}</td>
                 <td className="p-3">
                   <div className="flex flex-wrap gap-1">
@@ -216,7 +227,7 @@ export default async function BrowsePage({
             ))}
           </tbody>
         </table>
-      </Card>
+      </div>
 
       {totalPages > 1 && (
         <Pagination basePath="/browse" sp={sp} page={page} totalPages={totalPages} />
@@ -251,17 +262,17 @@ function Pagination({
   };
   return (
     <div className="flex items-center justify-between text-sm">
-      <span className="text-muted-foreground">
+      <span className="text-muted">
         Page {page} of {totalPages}
       </span>
-      <div className="flex gap-2">
+      <div className="flex gap-4 text-[11px] font-sans font-medium uppercase tracking-label">
         {page > 1 && (
-          <Link className="underline" href={make(page - 1)}>
+          <Link className="text-ink hover:text-accent" href={make(page - 1)}>
             ← Previous
           </Link>
         )}
         {page < totalPages && (
-          <Link className="underline" href={make(page + 1)}>
+          <Link className="text-ink hover:text-accent" href={make(page + 1)}>
             Next →
           </Link>
         )}

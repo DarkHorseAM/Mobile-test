@@ -35,12 +35,11 @@ async function deleteFragment(formData: FormData) {
 export default async function BlocklistConfigPage() {
   const rows = await db.select().from(urlBlocklist).orderBy(urlBlocklist.fragment);
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">URL blocklist</h1>
-        <p className="text-sm text-muted-foreground">
-          Articles whose URL contains any active fragment are skipped at scan time and never written to the database.
-          Match is case-insensitive substring.
+        <h1 className="font-sans font-bold text-3xl tracking-tight">URL Blocklist</h1>
+        <p className="mt-1 text-sm text-muted">
+          Articles whose URL contains any active fragment are skipped at scan time and never written to the database. Match is case-insensitive substring.
         </p>
       </div>
 
@@ -56,27 +55,36 @@ export default async function BlocklistConfigPage() {
         </form>
       </Card>
 
-      <Card className="p-0 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left">
-            <tr>
-              <th className="p-3">Fragment</th>
-              <th className="p-3 w-32">Status</th>
+      <div className="bg-panel border border-rule overflow-hidden">
+        <table className="w-full text-sm font-mono">
+          <thead className="border-b border-rule">
+            <tr className="text-left">
+              <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Fragment</th>
+              <th className="p-3 w-32 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Status</th>
               <th className="p-3 w-40"></th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td className="p-6 text-center text-muted-foreground" colSpan={3}>
-                  No fragments yet.
+                <td className="p-8 text-center text-muted" colSpan={3}>
+                  <span className="font-display text-xl text-ink">nothing blocked yet</span>
                 </td>
               </tr>
             )}
             {rows.map((f) => (
-              <tr key={f.id} className="border-t">
-                <td className="p-3 font-mono">{f.fragment}</td>
-                <td className="p-3">{f.isActive ? "Active" : "Disabled"}</td>
+              <tr key={f.id} className="border-t border-rule hover:bg-paper transition-colors">
+                <td className="p-3">{f.fragment}</td>
+                <td className="p-3">
+                  <span
+                    className={
+                      "text-[10px] font-sans font-medium uppercase tracking-label " +
+                      (f.isActive ? "text-ink" : "text-muted")
+                    }
+                  >
+                    {f.isActive ? "Active" : "Disabled"}
+                  </span>
+                </td>
                 <td className="p-3 flex gap-2">
                   <form action={toggleFragment}>
                     <input type="hidden" name="id" value={f.id} />
@@ -96,7 +104,7 @@ export default async function BlocklistConfigPage() {
             ))}
           </tbody>
         </table>
-      </Card>
+      </div>
     </div>
   );
 }

@@ -9,9 +9,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        border: "hsl(214 32% 91%)",
-        muted: "hsl(210 40% 96%)",
-        "muted-foreground": "hsl(215 16% 47%)",
+        ink: "var(--ink)",
+        paper: "var(--paper)",
+        panel: "var(--panel)",
+        accent: "var(--accent)",
+        "accent-hover": "var(--accent-hover)",
+        muted: "var(--muted)",
+        "muted-foreground": "var(--muted)",
+        rule: "var(--rule)",
+        border: "var(--rule)",
+      },
+      fontFamily: {
+        sans: ['"Lab Grotesque"', "system-ui", "sans-serif"],
+        mono: ['"PT Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
+        display: ['"LateNights"', '"Lab Grotesque"', "serif"],
+      },
+      letterSpacing: {
+        label: "0.08em",
       },
     },
   },
