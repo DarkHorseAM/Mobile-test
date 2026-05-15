@@ -11,6 +11,7 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:seed": "tsx --env-file=.env.local lib/db/seed.ts",
+    "db:migrate": "tsx --env-file=.env.local lib/db/migrate.ts",
     "scan": "tsx --env-file=.env.local lib/scanner/run.ts"
   },
   "dependencies": {
