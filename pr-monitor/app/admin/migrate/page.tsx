@@ -22,9 +22,9 @@ export default function MigratePage() {
       <div>
         <h1 className="font-sans font-bold text-3xl tracking-tight">Database Migration</h1>
         <p className="mt-1 text-sm text-muted">
-          One-time setup for the refinement pass: adds the confidence_score column,
-          creates the url_blocklist table with sport defaults, and deactivates the
-          retired Season hook pattern. All steps are idempotent — safe to re-run.
+          One-time database setup steps. Adds the url_blocklist table with sport
+          defaults, deactivates retired patterns, and drops the unused
+          confidence_score column. All steps are idempotent — safe to re-run.
         </p>
       </div>
 

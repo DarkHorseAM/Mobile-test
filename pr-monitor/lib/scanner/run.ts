@@ -69,11 +69,6 @@ export async function runScan(): Promise<ScanResult> {
       if (indicatorMatches.length === 0) continue;
       const brand = extractBrand(text, brandExtractors);
 
-      const confidenceScore =
-        indicatorMatches.length +
-        (brand ? 3 : 0) +
-        (/\d/.test(item.headline) ? 1 : 0);
-
       const inserted = await db
         .insert(articles)
         .values({
@@ -83,7 +78,6 @@ export async function runScan(): Promise<ScanResult> {
           summary: item.summary,
           brand,
           publishedAt: item.publishedAt,
-          confidenceScore,
         })
         .onConflictDoNothing({ target: articles.url })
         .returning({ id: articles.id });

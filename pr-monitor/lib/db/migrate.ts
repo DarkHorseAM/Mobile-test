@@ -47,6 +47,12 @@ export async function runMigration(): Promise<MigrationStep[]> {
     }
   });
 
+  await run("ALTER articles DROP COLUMN confidence_score", async () => {
+    await db.execute(
+      sql`ALTER TABLE articles DROP COLUMN IF EXISTS confidence_score`,
+    );
+  });
+
   return steps;
 }
 

@@ -2,8 +2,6 @@ import { db } from "./client";
 import { articles, matches, patterns, feeds } from "./schema";
 import { and, desc, eq, gte, ilike, inArray, lte, sql } from "drizzle-orm";
 
-export type SortKey = "date" | "confidence";
-
 export type ArticleFilters = {
   from?: Date;
   to?: Date;
@@ -12,8 +10,6 @@ export type ArticleFilters = {
   brand?: string;
   q?: string;
   hidden?: boolean;
-  minConfidence?: number;
-  sort?: SortKey;
   limit?: number;
   offset?: number;
 };
@@ -24,9 +20,6 @@ function buildWhere(f: ArticleFilters) {
   if (f.to) where.push(lte(articles.publishedAt, f.to));
   if (f.outlets && f.outlets.length > 0) where.push(inArray(articles.outlet, f.outlets));
   if (f.brand) where.push(ilike(articles.brand, `%${f.brand}%`));
-  if (typeof f.minConfidence === "number" && f.minConfidence > 0) {
-    where.push(gte(articles.confidenceScore, f.minConfidence));
-  }
   if (f.q) {
     where.push(
       sql`(${articles.headline} ilike ${"%" + f.q + "%"} or ${articles.summary} ilike ${"%" + f.q + "%"})`,
@@ -55,11 +48,6 @@ export async function listArticles(f: ArticleFilters) {
     ? and(baseWhere, inArray(articles.id, articleIds))
     : baseWhere;
 
-  const orderBy =
-    f.sort === "confidence"
-      ? [desc(articles.confidenceScore), desc(articles.publishedAt)]
-      : [desc(articles.publishedAt)];
-
   const rows = await db
     .select({
       id: articles.id,
@@ -69,11 +57,10 @@ export async function listArticles(f: ArticleFilters) {
       summary: articles.summary,
       brand: articles.brand,
       publishedAt: articles.publishedAt,
-      confidenceScore: articles.confidenceScore,
     })
     .from(articles)
     .where(filtered)
-    .orderBy(...orderBy)
+    .orderBy(desc(articles.publishedAt))
     .limit(limit)
     .offset(offset);
 
