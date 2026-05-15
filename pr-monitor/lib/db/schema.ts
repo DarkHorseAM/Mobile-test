@@ -23,7 +23,7 @@ export const patterns = pgTable("patterns", {
   slug: text("slug").notNull().unique(),
   label: text("label").notNull(),
   regex: text("regex").notNull(),
-  kind: text("kind").notNull().default("indicator"), // "indicator" | "brand"
+  kind: text("kind").notNull().default("indicator"),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
@@ -36,7 +36,6 @@ export const articles = pgTable(
     outlet: text("outlet").notNull(),
     headline: text("headline").notNull(),
     summary: text("summary").notNull().default(""),
-    brand: text("brand"),
     publishedAt: timestamp("published_at", { withTimezone: true }),
     scannedAt: timestamp("scanned_at", { withTimezone: true }).notNull().defaultNow(),
     hidden: boolean("hidden").notNull().default(false),

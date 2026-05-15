@@ -24,7 +24,8 @@ export default function MigratePage() {
         <p className="mt-1 text-sm text-muted">
           One-time database setup steps. Adds the url_blocklist table with sport
           defaults, deactivates retired patterns, and drops the unused
-          confidence_score column. All steps are idempotent — safe to re-run.
+          confidence_score and brand columns plus the brand-extractor patterns.
+          All steps are idempotent — safe to re-run.
         </p>
       </div>
 

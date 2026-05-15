@@ -9,7 +9,7 @@ import {
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { fetchFeed } from "./fetch";
-import { compilePatterns, findIndicatorMatches, extractBrand } from "./match";
+import { compilePatterns, findIndicatorMatches } from "./match";
 
 export type ScanResult = {
   feedsScanned: number;
@@ -26,7 +26,6 @@ export async function runScan(): Promise<ScanResult> {
   const activeFeeds = await db.select().from(feeds).where(eq(feeds.isActive, true));
   const activePatterns = await db.select().from(patterns).where(eq(patterns.isActive, true));
   const indicators = compilePatterns(activePatterns.filter((p) => p.kind === "indicator"));
-  const brandExtractors = compilePatterns(activePatterns.filter((p) => p.kind === "brand"));
   const blockedFragments = (
     await db.select({ fragment: urlBlocklist.fragment }).from(urlBlocklist).where(eq(urlBlocklist.isActive, true))
   ).map((r) => r.fragment.toLowerCase());
@@ -67,7 +66,6 @@ export async function runScan(): Promise<ScanResult> {
       const text = `${item.headline}\n${item.summary}`;
       const indicatorMatches = findIndicatorMatches(text, indicators);
       if (indicatorMatches.length === 0) continue;
-      const brand = extractBrand(text, brandExtractors);
 
       const inserted = await db
         .insert(articles)
@@ -76,7 +74,6 @@ export async function runScan(): Promise<ScanResult> {
           outlet: feed.name,
           headline: item.headline,
           summary: item.summary,
-          brand,
           publishedAt: item.publishedAt,
         })
         .onConflictDoNothing({ target: articles.url })

@@ -14,7 +14,6 @@ type SP = {
   q?: string;
   outlet?: string | string[];
   pattern?: string | string[];
-  brand?: string;
   from?: string;
   to?: string;
   page?: string;
@@ -42,7 +41,6 @@ export default async function BrowsePage({
       q: sp.q,
       outlets,
       patternSlugs,
-      brand: sp.brand,
       from: sp.from ? new Date(sp.from) : undefined,
       to: sp.to ? new Date(sp.to + "T23:59:59Z") : undefined,
       limit: pageSize,
@@ -57,7 +55,6 @@ export default async function BrowsePage({
 
   const exportHref = `/api/export?${new URLSearchParams({
     ...(sp.q ? { q: sp.q } : {}),
-    ...(sp.brand ? { brand: sp.brand } : {}),
     ...(sp.from ? { from: sp.from } : {}),
     ...(sp.to ? { to: sp.to } : {}),
     ...outlets.reduce((a, o, i) => ({ ...a, [`outlet${i}`]: o }), {}),
@@ -81,13 +78,9 @@ export default async function BrowsePage({
 
       <Card>
         <form method="get" className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
-          <div className="md:col-span-2">
+          <div className="md:col-span-4">
             <Label htmlFor="q">Search headline / summary</Label>
             <Input id="q" name="q" defaultValue={sp.q ?? ""} placeholder="e.g. sleep, holiday, salary" />
-          </div>
-          <div className="md:col-span-2">
-            <Label htmlFor="brand">Brand</Label>
-            <Input id="brand" name="brand" defaultValue={sp.brand ?? ""} />
           </div>
           <div>
             <Label htmlFor="from">From</Label>
@@ -148,14 +141,13 @@ export default async function BrowsePage({
               <th className="p-3 w-24 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Date</th>
               <th className="p-3 w-40 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Outlet</th>
               <th className="p-3 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Headline</th>
-              <th className="p-3 w-40 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Brand</th>
               <th className="p-3 w-56 text-[11px] font-sans font-medium uppercase tracking-label text-muted">Patterns</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td className="p-8 text-center text-muted" colSpan={5}>
+                <td className="p-8 text-center text-muted" colSpan={4}>
                   <span className="font-display text-2xl text-ink">nothing yet</span>
                   <div className="mt-1 text-sm">No articles match. Try running a scan or relaxing your filters.</div>
                 </td>
@@ -173,7 +165,6 @@ export default async function BrowsePage({
                   </a>
                   {r.summary && <div className="text-xs text-muted mt-1 line-clamp-2 break-words">{r.summary}</div>}
                 </td>
-                <td className="p-3 truncate">{r.brand ?? <span className="text-muted">—</span>}</td>
                 <td className="p-3">
                   <div className="flex flex-wrap gap-1">
                     {(matchMap.get(r.id) ?? []).map((m) => (
@@ -208,7 +199,6 @@ function Pagination({
   const make = (p: number) => {
     const params = new URLSearchParams();
     if (sp.q) params.set("q", sp.q);
-    if (sp.brand) params.set("brand", sp.brand);
     if (sp.from) params.set("from", sp.from);
     if (sp.to) params.set("to", sp.to);
     toArray(sp.outlet).forEach((o) => params.append("outlet", o));

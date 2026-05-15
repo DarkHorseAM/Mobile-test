@@ -1,5 +1,4 @@
 import {
-  topBrands,
   topOutlets,
   topPatterns,
   patternCountsForRange,
@@ -21,8 +20,7 @@ export default async function TrendsPage() {
   const sevenDays = daysAgo(7);
   const fourteenDays = daysAgo(14);
 
-  const [brands, outlets, pats, thisWeek, lastWeek, words] = await Promise.all([
-    topBrands(sevenDays),
+  const [outlets, pats, thisWeek, lastWeek, words] = await Promise.all([
     topOutlets(sevenDays),
     topPatterns(sevenDays),
     patternCountsForRange(sevenDays, now),
@@ -52,29 +50,7 @@ export default async function TrendsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <h2 className="text-[11px] font-sans font-medium uppercase tracking-label text-muted mb-3">
-            Top brands
-          </h2>
-          <ol className="space-y-1.5 text-sm">
-            {brands.length === 0 && (
-              <li className="text-muted font-display text-lg">none yet</li>
-            )}
-            {brands.map((b) => (
-              <li key={b.brand} className="flex items-center justify-between gap-2">
-                <Link
-                  className="hover:text-accent hover:underline truncate"
-                  href={`/browse?brand=${encodeURIComponent(b.brand ?? "")}`}
-                >
-                  {b.brand}
-                </Link>
-                <span className="text-muted tabular-nums">{b.count}</span>
-              </li>
-            ))}
-          </ol>
-        </Card>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <h2 className="text-[11px] font-sans font-medium uppercase tracking-label text-muted mb-3">
             Top patterns

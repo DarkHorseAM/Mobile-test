@@ -1,13 +1,12 @@
 import { db } from "./client";
 import { articles, matches, patterns, feeds } from "./schema";
-import { and, desc, eq, gte, ilike, inArray, lte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 
 export type ArticleFilters = {
   from?: Date;
   to?: Date;
   outlets?: string[];
   patternSlugs?: string[];
-  brand?: string;
   q?: string;
   hidden?: boolean;
   limit?: number;
@@ -19,7 +18,6 @@ function buildWhere(f: ArticleFilters) {
   if (f.from) where.push(gte(articles.publishedAt, f.from));
   if (f.to) where.push(lte(articles.publishedAt, f.to));
   if (f.outlets && f.outlets.length > 0) where.push(inArray(articles.outlet, f.outlets));
-  if (f.brand) where.push(ilike(articles.brand, `%${f.brand}%`));
   if (f.q) {
     where.push(
       sql`(${articles.headline} ilike ${"%" + f.q + "%"} or ${articles.summary} ilike ${"%" + f.q + "%"})`,
@@ -55,7 +53,6 @@ export async function listArticles(f: ArticleFilters) {
       outlet: articles.outlet,
       headline: articles.headline,
       summary: articles.summary,
-      brand: articles.brand,
       publishedAt: articles.publishedAt,
     })
     .from(articles)

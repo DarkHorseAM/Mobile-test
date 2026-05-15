@@ -98,14 +98,3 @@ export const SEED_URL_BLOCKLIST: string[] = [
   "/rugby/",
   "/tennis/",
 ];
-
-// Brand extractors — each must have exactly one capture group, first match wins.
-export const SEED_BRAND_EXTRACTORS: { slug: string; label: string; regex: string }[] = [
-  { slug: "research_by_brand", label: "research by X", regex: "\\baccording to (?:new |recent |fresh )?research (?:by|from|conducted by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)" },
-  { slug: "study_by_brand", label: "study by X", regex: "\\b(?:a |new )?stud(?:y|ies) (?:by|from|conducted by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)" },
-  { slug: "survey_by_brand", label: "survey by X", regex: "\\b(?:a |new )?(?:survey|poll) (?:by|from|conducted by|commissioned by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)" },
-  { slug: "data_from_brand", label: "data from X", regex: "\\b(?:data|figures|analysis) (?:from|by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)" },
-  { slug: "experts_at_brand", label: "experts at X", regex: "\\bexperts? (?:at|from)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:say|said|warn|warned|reveal|revealed|claim|claimed)\\b|$)" },
-  { slug: "report_by_brand", label: "report by X", regex: "\\b(?:a |new |latest )?report (?:by|from|published by|commissioned by)\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|\\s+(?:found|finds|shows|revealed|reveals|suggests|claims|warns)\\b|$)" },
-  { slug: "commissioned_by_brand", label: "commissioned by X", regex: "\\bcommissioned by\\s+([A-Z][\\w&.'’\\- ]{2,60}?)(?=[\\.,;:]|$)" },
-];
