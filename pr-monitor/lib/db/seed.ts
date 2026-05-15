@@ -1,7 +1,13 @@
 import { db } from "./client";
-import { feeds, patterns } from "./schema";
-import { SEED_FEEDS, SEED_INDICATORS, SEED_BRAND_EXTRACTORS } from "./seed-data";
-import { sql } from "drizzle-orm";
+import { feeds, patterns, urlBlocklist } from "./schema";
+import {
+  SEED_FEEDS,
+  SEED_INDICATORS,
+  SEED_BRAND_EXTRACTORS,
+  SEED_URL_BLOCKLIST,
+  RETIRED_PATTERN_SLUGS,
+} from "./seed-data";
+import { sql, eq } from "drizzle-orm";
 
 async function main() {
   console.log("Seeding feeds...");
@@ -28,9 +34,25 @@ async function main() {
       .onConflictDoNothing({ target: patterns.slug });
   }
 
+  console.log("Deactivating retired patterns...");
+  for (const slug of RETIRED_PATTERN_SLUGS) {
+    await db.update(patterns).set({ isActive: false }).where(eq(patterns.slug, slug));
+  }
+
+  console.log("Seeding URL blocklist...");
+  for (const fragment of SEED_URL_BLOCKLIST) {
+    await db
+      .insert(urlBlocklist)
+      .values({ fragment })
+      .onConflictDoNothing({ target: urlBlocklist.fragment });
+  }
+
   const feedRows = await db.select({ c: sql<number>`count(*)::int` }).from(feeds);
   const patternRows = await db.select({ c: sql<number>`count(*)::int` }).from(patterns);
-  console.log(`Done. ${feedRows[0]?.c ?? 0} feeds, ${patternRows[0]?.c ?? 0} patterns.`);
+  const blockRows = await db.select({ c: sql<number>`count(*)::int` }).from(urlBlocklist);
+  console.log(
+    `Done. ${feedRows[0]?.c ?? 0} feeds, ${patternRows[0]?.c ?? 0} patterns, ${blockRows[0]?.c ?? 0} blocklist fragments.`,
+  );
 }
 
 main().catch((err) => {

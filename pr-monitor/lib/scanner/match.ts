@@ -43,6 +43,32 @@ export function findIndicatorMatches(
   return matches;
 }
 
+const BRAND_REJECT_VERBS = new Set([
+  "is", "are", "was", "were",
+  "suggest", "suggests",
+  "reveal", "reveals",
+  "find", "finds",
+  "show", "shows",
+  "say", "says",
+]);
+
+const BRAND_REJECT_PREFIXES = new Set(["the", "a", "last"]);
+
+export function cleanBrand(raw: string): string | null {
+  let s = raw.trim();
+  s = s.replace(/[’']s$/i, "");
+  s = s.replace(/[.,;:'‘’“”]+$/g, "").trim();
+  if (s.length < 3 || s.length > 80) return null;
+  if (!/^[A-Z]/.test(s)) return null;
+  const words = s.split(/\s+/);
+  if (words.length > 4) return null;
+  if (BRAND_REJECT_PREFIXES.has(words[0].toLowerCase())) return null;
+  for (const w of words) {
+    if (BRAND_REJECT_VERBS.has(w.toLowerCase())) return null;
+  }
+  return s;
+}
+
 export function extractBrand(
   text: string,
   brandExtractors: CompiledPattern[],
@@ -50,8 +76,8 @@ export function extractBrand(
   for (const ext of brandExtractors) {
     const m = ext.regex.exec(text);
     if (m && m[1]) {
-      const brand = m[1].trim().replace(/[.,;:]+$/, "");
-      if (brand.length >= 3 && brand.length <= 80) return brand;
+      const cleaned = cleanBrand(m[1]);
+      if (cleaned) return cleaned;
     }
   }
   return null;

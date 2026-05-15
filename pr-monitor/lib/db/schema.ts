@@ -40,6 +40,7 @@ export const articles = pgTable(
     publishedAt: timestamp("published_at", { withTimezone: true }),
     scannedAt: timestamp("scanned_at", { withTimezone: true }).notNull().defaultNow(),
     hidden: boolean("hidden").notNull().default(false),
+    confidenceScore: integer("confidence_score").notNull().default(0),
   },
   (t) => ({
     urlIdx: uniqueIndex("articles_url_idx").on(t.url),
@@ -68,6 +69,13 @@ export const matches = pgTable(
     patternIdx: index("matches_pattern_idx").on(t.patternId),
   }),
 );
+
+export const urlBlocklist = pgTable("url_blocklist", {
+  id: serial("id").primaryKey(),
+  fragment: text("fragment").notNull().unique(),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 export const scanRuns = pgTable("scan_runs", {
   id: serial("id").primaryKey(),

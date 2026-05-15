@@ -25,6 +25,7 @@ export default function RootLayout({
               <Link href="/trends" className="hover:underline">Trends</Link>
               <Link href="/config/feeds" className="hover:underline">Feeds</Link>
               <Link href="/config/patterns" className="hover:underline">Patterns</Link>
+              <Link href="/config/blocklist" className="hover:underline">Blocklist</Link>
             </nav>
           </div>
         </header>

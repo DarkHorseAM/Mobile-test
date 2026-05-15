@@ -63,9 +63,20 @@ export const SEED_INDICATORS: { slug: string; label: string; regex: string }[] =
   // Trend / Google search hooks
   { slug: "google_searches", label: "Google searches", regex: "\\b(?:google )?searches? (?:for|spike|surge|jump|up)\\b" },
   { slug: "tiktok_trend", label: "TikTok / viral trend", regex: "\\b(?:tiktok|viral) (?:trend|hack|recipe|craze)\\b" },
+];
 
-  // Calendar PR hooks
-  { slug: "this_summer_winter", label: "Season hook", regex: "\\b(?:this|in time for) (?:summer|winter|christmas|easter|halloween|valentine'?s|black friday)\\b" },
+// Slugs of patterns that used to ship in seed but have been retired. The
+// seed script deactivates these instead of deleting them so historical
+// matches stay readable in the UI.
+export const RETIRED_PATTERN_SLUGS: string[] = ["this_summer_winter"];
+
+export const SEED_URL_BLOCKLIST: string[] = [
+  "/sport/",
+  "/football/",
+  "/sport/football/",
+  "/cricket/",
+  "/rugby/",
+  "/tennis/",
 ];
 
 // Brand extractors — each must have exactly one capture group, first match wins.
