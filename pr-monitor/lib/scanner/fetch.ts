@@ -16,11 +16,6 @@ function parserFor(url: string): Parser {
     Accept: "application/rss+xml, application/xml;q=0.9, */*;q=0.8",
   };
 
-  // Telegraph blocks server-side fetches without a browser UA + Referer.
-  if (/telegraph\.co\.uk/i.test(url)) {
-    headers["Referer"] = "https://www.telegraph.co.uk/";
-  }
-
   // ITV's RSS endpoint regularly takes longer than the default budget.
   const timeout = /itv\.com/i.test(url) ? 30000 : 15000;
 

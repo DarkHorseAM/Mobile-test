@@ -9,8 +9,6 @@ export const SEED_FEEDS: { name: string; url: string; tier: string }[] = [
 
   // National broadsheets
   { name: "The Guardian", url: "https://www.theguardian.com/uk/rss", tier: "broadsheet" },
-  { name: "The Telegraph", url: "https://www.telegraph.co.uk/rss.xml", tier: "broadsheet" },
-  { name: "The Times", url: "https://www.thetimes.co.uk/rss", tier: "broadsheet" },
   { name: "The Independent", url: "https://www.independent.co.uk/news/uk/rss", tier: "broadsheet" },
   { name: "i News", url: "https://inews.co.uk/feed", tier: "broadsheet" },
   { name: "Financial Times (UK)", url: "https://www.ft.com/rss/uk", tier: "broadsheet" },
