@@ -1,4 +1,3 @@
-import { auth } from "@/lib/auth";
 import { listArticles, getArticleMatches } from "@/lib/db/queries";
 
 export const dynamic = "force-dynamic";
@@ -13,9 +12,6 @@ function csvEscape(v: unknown): string {
 }
 
 export async function GET(req: Request) {
-  const session = await auth();
-  if (!session?.user) return new Response("unauthorized", { status: 401 });
-
   const url = new URL(req.url);
   const sp = url.searchParams;
   const outlets: string[] = [];

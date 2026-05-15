@@ -80,45 +80,6 @@ export const scanRuns = pgTable("scan_runs", {
   error: text("error"),
 });
 
-// Auth.js v5 tables
-export const users = pgTable("users", {
-  id: text("id").primaryKey(),
-  name: text("name"),
-  email: text("email").notNull().unique(),
-  emailVerified: timestamp("emailVerified", { withTimezone: true }),
-  image: text("image"),
-});
-
-export const accounts = pgTable("accounts", {
-  userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
-  type: text("type").notNull(),
-  provider: text("provider").notNull(),
-  providerAccountId: text("providerAccountId").notNull(),
-  refresh_token: text("refresh_token"),
-  access_token: text("access_token"),
-  expires_at: integer("expires_at"),
-  token_type: text("token_type"),
-  scope: text("scope"),
-  id_token: text("id_token"),
-  session_state: text("session_state"),
-}, (t) => ({
-  pk: uniqueIndex("accounts_pk").on(t.provider, t.providerAccountId),
-}));
-
-export const sessions = pgTable("sessions", {
-  sessionToken: text("sessionToken").primaryKey(),
-  userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { withTimezone: true }).notNull(),
-});
-
-export const verificationTokens = pgTable("verificationTokens", {
-  identifier: text("identifier").notNull(),
-  token: text("token").notNull(),
-  expires: timestamp("expires", { withTimezone: true }).notNull(),
-}, (t) => ({
-  pk: uniqueIndex("vt_pk").on(t.identifier, t.token),
-}));
-
 export type Article = typeof articles.$inferSelect;
 export type NewArticle = typeof articles.$inferInsert;
 export type Pattern = typeof patterns.$inferSelect;
