@@ -23,7 +23,6 @@ export async function GET(req: Request) {
 
   const { rows } = await listArticles({
     q: sp.get("q") ?? undefined,
-    brand: sp.get("brand") ?? undefined,
     from: sp.get("from") ? new Date(sp.get("from")!) : undefined,
     to: sp.get("to") ? new Date(sp.get("to")! + "T23:59:59Z") : undefined,
     outlets: outlets.length ? outlets : undefined,
@@ -33,7 +32,7 @@ export async function GET(req: Request) {
 
   const matchMap = await getArticleMatches(rows.map((r) => r.id));
 
-  const header = ["published_at", "outlet", "headline", "brand", "patterns", "url"];
+  const header = ["published_at", "outlet", "headline", "patterns", "url"];
   const lines = [header.join(",")];
   for (const r of rows) {
     const patterns = (matchMap.get(r.id) ?? []).map((m) => m.label).join("; ");
@@ -42,7 +41,6 @@ export async function GET(req: Request) {
         r.publishedAt ? new Date(r.publishedAt).toISOString() : "",
         r.outlet,
         r.headline,
-        r.brand ?? "",
         patterns,
         r.url,
       ]

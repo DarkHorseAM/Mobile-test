@@ -53,6 +53,14 @@ export async function runMigration(): Promise<MigrationStep[]> {
     );
   });
 
+  await run("DELETE brand-extractor patterns", async () => {
+    await db.execute(sql`DELETE FROM patterns WHERE kind = 'brand'`);
+  });
+
+  await run("ALTER articles DROP COLUMN brand", async () => {
+    await db.execute(sql`ALTER TABLE articles DROP COLUMN IF EXISTS brand`);
+  });
+
   return steps;
 }
 

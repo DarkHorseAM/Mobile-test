@@ -1,19 +1,6 @@
 import { db } from "./client";
 import { articles, matches, patterns } from "./schema";
-import { and, desc, eq, gte, isNotNull, sql } from "drizzle-orm";
-
-export async function topBrands(since: Date, limit = 10) {
-  return db
-    .select({
-      brand: articles.brand,
-      count: sql<number>`count(*)::int`,
-    })
-    .from(articles)
-    .where(and(isNotNull(articles.brand), gte(articles.publishedAt, since), eq(articles.hidden, false)))
-    .groupBy(articles.brand)
-    .orderBy(desc(sql`count(*)`))
-    .limit(limit);
-}
+import { and, desc, eq, gte, sql } from "drizzle-orm";
 
 export async function topOutlets(since: Date, limit = 10) {
   return db

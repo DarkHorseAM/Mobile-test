@@ -11,14 +11,16 @@ async function addPattern(formData: FormData) {
   const slug = String(formData.get("slug") ?? "").trim();
   const label = String(formData.get("label") ?? "").trim();
   const regex = String(formData.get("regex") ?? "").trim();
-  const kind = String(formData.get("kind") ?? "indicator").trim();
   if (!slug || !label || !regex) return;
   try {
     new RegExp(regex);
   } catch {
     return;
   }
-  await db.insert(patterns).values({ slug, label, regex, kind }).onConflictDoNothing({ target: patterns.slug });
+  await db
+    .insert(patterns)
+    .values({ slug, label, regex, kind: "indicator" })
+    .onConflictDoNothing({ target: patterns.slug });
   revalidatePath("/config/patterns");
 }
 
@@ -38,21 +40,24 @@ async function deletePattern(formData: FormData) {
 }
 
 export default async function PatternsConfigPage() {
-  const rows = await db.select().from(patterns).orderBy(patterns.kind, patterns.label);
-  const indicators = rows.filter((r) => r.kind === "indicator");
-  const brandExtractors = rows.filter((r) => r.kind === "brand");
+  const indicators = await db
+    .select()
+    .from(patterns)
+    .where(eq(patterns.kind, "indicator"))
+    .orderBy(patterns.label);
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="font-sans font-bold text-3xl tracking-tight">Patterns</h1>
         <p className="mt-1 text-sm text-muted">
-          Regex applied to headline + summary. Indicators flag PR shape; brand extractors pull the source name from the first capture group.
+          Regex applied to each article&apos;s headline + summary. A hit on any
+          pattern flags the article as PR-shaped and stores it.
         </p>
       </div>
 
       <Card>
-        <form action={addPattern} className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+        <form action={addPattern} className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
           <div>
             <Label htmlFor="slug">Slug</Label>
             <Input id="slug" name="slug" required placeholder="ranked_top_n" />
@@ -65,25 +70,13 @@ export default async function PatternsConfigPage() {
             <Label htmlFor="regex">Regex</Label>
             <Input id="regex" name="regex" required placeholder="\\btop \\d{1,3}\\b" />
           </div>
-          <div>
-            <Label htmlFor="kind">Kind</Label>
-            <select
-              id="kind"
-              name="kind"
-              className="h-9 w-full bg-panel border border-rule px-2 text-sm font-mono text-ink focus:border-accent focus:outline-none"
-            >
-              <option value="indicator">indicator</option>
-              <option value="brand">brand</option>
-            </select>
-          </div>
-          <div className="md:col-span-6">
+          <div className="md:col-span-5">
             <Button type="submit">Add pattern</Button>
           </div>
         </form>
       </Card>
 
       <Section title="Indicators" rows={indicators} toggle={togglePattern} remove={deletePattern} />
-      <Section title="Brand extractors" rows={brandExtractors} toggle={togglePattern} remove={deletePattern} />
     </div>
   );
 }

@@ -3,7 +3,6 @@ import { feeds, patterns, urlBlocklist } from "./schema";
 import {
   SEED_FEEDS,
   SEED_INDICATORS,
-  SEED_BRAND_EXTRACTORS,
   SEED_URL_BLOCKLIST,
   RETIRED_PATTERN_SLUGS,
 } from "./seed-data";
@@ -23,14 +22,6 @@ async function main() {
     await db
       .insert(patterns)
       .values({ slug: p.slug, label: p.label, regex: p.regex, kind: "indicator" })
-      .onConflictDoNothing({ target: patterns.slug });
-  }
-
-  console.log("Seeding brand extractors...");
-  for (const p of SEED_BRAND_EXTRACTORS) {
-    await db
-      .insert(patterns)
-      .values({ slug: p.slug, label: p.label, regex: p.regex, kind: "brand" })
       .onConflictDoNothing({ target: patterns.slug });
   }
 
