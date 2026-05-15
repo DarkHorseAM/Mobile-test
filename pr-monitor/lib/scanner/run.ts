@@ -40,14 +40,23 @@ export async function runScan(): Promise<ScanResult> {
     errors: [],
   };
 
-  for (const feed of activeFeeds) {
-    let items: Awaited<ReturnType<typeof fetchFeed>>;
-    try {
-      items = await fetchFeed(feed.url);
-    } catch (e) {
-      result.errors.push({ feed: feed.name, message: (e as Error).message });
+  // Fetch all feeds concurrently — the per-feed fetch is the slow step
+  // (network + 15-30s timeout each), so a sequential loop blows the
+  // function budget once we have 50+ feeds.
+  const fetchResults = await Promise.allSettled(
+    activeFeeds.map((feed) => fetchFeed(feed.url)),
+  );
+
+  // DB inserts stay sequential per-feed to avoid hammering Neon with
+  // 50+ concurrent transactions.
+  for (let i = 0; i < activeFeeds.length; i++) {
+    const feed = activeFeeds[i];
+    const fetchResult = fetchResults[i];
+    if (fetchResult.status === "rejected") {
+      result.errors.push({ feed: feed.name, message: (fetchResult.reason as Error).message });
       continue;
     }
+    const items = fetchResult.value;
     result.feedsScanned += 1;
     result.articlesSeen += items.length;
 
