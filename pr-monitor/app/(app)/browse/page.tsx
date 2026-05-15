@@ -5,6 +5,7 @@ import {
   listIndicatorPatternsForFilter,
 } from "@/lib/db/queries";
 import { Badge, Button, Card, Input, Label } from "@/components/ui/ui";
+import { RunScanButton } from "@/components/run-scan-button";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -91,9 +92,7 @@ export default async function BrowsePage({
           <a href={exportHref}>
             <Button variant="outline">Export CSV</Button>
           </a>
-          <form action="/api/scan" method="post">
-            <Button type="submit">Run scan now</Button>
-          </form>
+          <RunScanButton />
         </div>
       </div>
 

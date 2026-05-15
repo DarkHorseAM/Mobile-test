@@ -1,6 +1,7 @@
 import Parser from "rss-parser";
 
-const parser = new Parser({ timeout: 15000 });
+const BROWSER_UA =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
 export type FetchedItem = {
   url: string;
@@ -9,8 +10,25 @@ export type FetchedItem = {
   publishedAt: Date | null;
 };
 
+function parserFor(url: string): Parser {
+  const headers: Record<string, string> = {
+    "User-Agent": BROWSER_UA,
+    Accept: "application/rss+xml, application/xml;q=0.9, */*;q=0.8",
+  };
+
+  // Telegraph blocks server-side fetches without a browser UA + Referer.
+  if (/telegraph\.co\.uk/i.test(url)) {
+    headers["Referer"] = "https://www.telegraph.co.uk/";
+  }
+
+  // ITV's RSS endpoint regularly takes longer than the default budget.
+  const timeout = /itv\.com/i.test(url) ? 30000 : 15000;
+
+  return new Parser({ timeout, headers });
+}
+
 export async function fetchFeed(url: string): Promise<FetchedItem[]> {
-  const feed = await parser.parseURL(url);
+  const feed = await parserFor(url).parseURL(url);
   return (feed.items ?? [])
     .map((item) => {
       const link = (item.link ?? item.guid ?? "").trim();
