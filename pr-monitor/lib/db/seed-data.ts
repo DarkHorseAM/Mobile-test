@@ -24,6 +24,28 @@ export const SEED_FEEDS: { name: string; url: string; tier: string }[] = [
   { name: "Liverpool Echo", url: "https://www.liverpoolecho.co.uk/?service=rss", tier: "regional" },
   { name: "Birmingham Live", url: "https://www.birminghammail.co.uk/?service=rss", tier: "regional" },
   { name: "Evening Standard", url: "https://www.standard.co.uk/rss", tier: "regional" },
+  { name: "Yorkshire Post", url: "https://www.yorkshirepost.co.uk/news/rss", tier: "regional" },
+  { name: "Belfast Telegraph", url: "https://www.belfasttelegraph.co.uk/news/rss/", tier: "regional" },
+
+  // National gap-fillers (added in feed-list expansion)
+  { name: "HuffPost UK", url: "https://www.huffingtonpost.co.uk/feeds/index.xml", tier: "broadsheet" },
+  { name: "Yahoo News UK", url: "https://uk.news.yahoo.com/rss", tier: "broadsheet" },
+
+  // Lifestyle / vertical
+  { name: "Cosmopolitan UK", url: "https://www.cosmopolitan.com/uk/rss/all.xml/", tier: "lifestyle" },
+  { name: "Stylist", url: "https://www.stylist.co.uk/feed", tier: "lifestyle" },
+  { name: "Bustle UK", url: "https://www.bustle.com/rss", tier: "lifestyle" },
+  { name: "House Beautiful UK", url: "https://www.housebeautiful.com/uk/rss/all.xml/", tier: "lifestyle" },
+  { name: "Time Out London", url: "https://www.timeout.com/london/blog/feed.rss", tier: "lifestyle" },
+  { name: "Hello! Magazine", url: "https://www.hellomagazine.com/rss.xml", tier: "lifestyle" },
+  { name: "Glamour UK", url: "https://www.glamourmagazine.co.uk/feed/rss", tier: "lifestyle" },
+  { name: "Red Magazine", url: "https://www.redonline.co.uk/rss/all.xml/", tier: "lifestyle" },
+  { name: "Delish UK", url: "https://www.delish.com/uk/rss/all.xml/", tier: "lifestyle" },
+  { name: "Country Living UK", url: "https://www.countryliving.com/uk/rss/all.xml/", tier: "lifestyle" },
+  { name: "Good Housekeeping UK", url: "https://www.goodhousekeeping.com/uk/rss/all.xml/", tier: "lifestyle" },
+  { name: "Ideal Home", url: "https://www.idealhome.co.uk/feed", tier: "lifestyle" },
+  { name: "Digital Spy", url: "https://www.digitalspy.com/rss/default.xml", tier: "lifestyle" },
+  { name: "The Tab", url: "https://thetab.com/feed/", tier: "lifestyle" },
 ];
 
 export const SEED_INDICATORS: { slug: string; label: string; regex: string }[] = [
