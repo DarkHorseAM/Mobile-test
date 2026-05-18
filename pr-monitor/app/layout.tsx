@@ -26,6 +26,35 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-paper text-ink font-mono antialiased">
+        <div className="bg-ink text-paper">
+          <div className="mx-auto max-w-7xl px-6 py-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 text-[10px] font-sans font-medium uppercase tracking-label">
+            <span>Dark Horse PR Tools</span>
+            <nav className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <a
+                href="https://pr-tools-launcher.vercel.app/"
+                className="hover:text-accent transition-colors"
+              >
+                Tools home
+              </a>
+              <span className="text-accent" aria-current="page">
+                PR Campaign Monitor
+              </span>
+              <a
+                href="https://pr-tool-beta.vercel.app/"
+                className="hover:text-accent transition-colors"
+              >
+                PR Index Builder
+              </a>
+              <a
+                href="https://media-syndicate-pro.vercel.app/"
+                className="hover:text-accent transition-colors"
+              >
+                Syndication Checker
+              </a>
+            </nav>
+          </div>
+        </div>
+
         <header className="bg-paper border-b border-rule">
           <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between gap-6">
             <Link href="/" className="flex items-center gap-3">
