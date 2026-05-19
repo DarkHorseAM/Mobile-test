@@ -5,7 +5,12 @@ export function middleware(req: NextRequest) {
   const password = process.env.SITE_PASSWORD;
 
   if (!password) return NextResponse.next();
-  if (pathname === "/login" || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+  if (
+    pathname === "/login" ||
+    pathname.startsWith("/_next") ||
+    pathname === "/favicon.ico" ||
+    pathname.startsWith("/icon")
+  ) {
     return NextResponse.next();
   }
   if (pathname === "/api/scan" && req.headers.get("authorization")?.startsWith("Bearer ")) {
