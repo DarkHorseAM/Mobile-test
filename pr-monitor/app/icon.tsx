@@ -9,18 +9,19 @@ export default function Icon() {
       <div
         style={{
           background: "#0A0A0A",
-          color: "#FFFFFF",
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 24,
+          fontSize: 28,
           fontWeight: 900,
-          letterSpacing: "-0.04em",
+          letterSpacing: "-0.02em",
         }}
       >
-        DPR
+        <span style={{ color: "#FFFFFF" }}>D</span>
+        <span style={{ color: "#E40100" }}>P</span>
+        <span style={{ color: "#FFFFFF" }}>R</span>
       </div>
     ),
     { ...size },
