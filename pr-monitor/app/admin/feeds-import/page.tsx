@@ -5,7 +5,7 @@ import { fetchFeed } from "@/lib/scanner/fetch";
 import { Button, Card } from "@/components/ui/ui";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { eq, inArray } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -21,16 +21,14 @@ type ProbeResult = {
   alreadyInDb: boolean;
 };
 
-type ApplyResult = { name: string; url: string; inserted: boolean };
+// In-memory cache of last probe results, for the page render only. On
+// Vercel this lives in one Lambda instance and won't reliably survive
+// across requests — but it's fine as a "best effort" so the same warm
+// Lambda doesn't re-probe on every reload. The apply action does NOT
+// depend on this; it re-probes from scratch.
+const STORE: { probed: ProbeResult[] | null } = { probed: null };
 
-const STORE: {
-  probed: ProbeResult[] | null;
-  applied: ApplyResult[] | null;
-  appliedAt: Date | null;
-} = { probed: null, applied: null, appliedAt: null };
-
-async function probe() {
-  "use server";
+async function probeAll(): Promise<ProbeResult[]> {
   const existingUrls = new Set(
     (
       await db
@@ -52,7 +50,7 @@ async function probe() {
     }),
   );
 
-  STORE.probed = results.map((r, i) => {
+  return results.map((r, i) => {
     const c = FEED_CANDIDATES[i];
     const alreadyInDb = existingUrls.has(c.url);
     if (r.status === "rejected") {
@@ -79,34 +77,47 @@ async function probe() {
       alreadyInDb,
     };
   });
-  STORE.applied = null;
-  STORE.appliedAt = null;
+}
+
+async function probe() {
+  "use server";
+  STORE.probed = await probeAll();
   revalidatePath("/admin/feeds-import");
   redirect("/admin/feeds-import");
 }
 
 async function apply() {
   "use server";
-  if (!STORE.probed) return;
-  const toInsert = STORE.probed.filter((r) => r.ok && !r.alreadyInDb);
-  const applied: ApplyResult[] = [];
+  // Always re-probe so Apply doesn't depend on STORE surviving a cold
+  // Lambda boundary. Slower (~30s) but reliable.
+  const probed = await probeAll();
+  STORE.probed = probed;
+
+  const toInsert = probed.filter((r) => r.ok && !r.alreadyInDb);
+  let insertedCount = 0;
   for (const r of toInsert) {
     const ins = await db
       .insert(feeds)
       .values({ name: r.name, url: r.url, tier: r.tier })
       .onConflictDoNothing({ target: feeds.url })
       .returning({ id: feeds.id });
-    applied.push({ name: r.name, url: r.url, inserted: ins.length > 0 });
+    if (ins.length > 0) insertedCount += 1;
   }
-  STORE.applied = applied;
-  STORE.appliedAt = new Date();
   revalidatePath("/admin/feeds-import");
-  redirect("/admin/feeds-import");
+  revalidatePath("/config/feeds");
+  redirect(`/admin/feeds-import?applied=${insertedCount}`);
 }
 
-export default function FeedsImportPage() {
+export default async function FeedsImportPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ applied?: string }>;
+}) {
+  const { applied: appliedRaw } = await searchParams;
+  const appliedCount =
+    appliedRaw && /^\d+$/.test(appliedRaw) ? Number(appliedRaw) : null;
+
   const probed = STORE.probed;
-  const applied = STORE.applied;
   const okCount = probed?.filter((r) => r.ok).length ?? 0;
   const failCount = probed?.filter((r) => !r.ok).length ?? 0;
   const newCount = probed?.filter((r) => r.ok && !r.alreadyInDb).length ?? 0;
@@ -123,6 +134,17 @@ export default function FeedsImportPage() {
           results table.
         </p>
       </div>
+
+      {appliedCount !== null && (
+        <div className="bg-panel border border-rule p-4 text-sm">
+          <span className="text-[11px] font-sans font-medium uppercase tracking-label text-ink mr-2">
+            Applied
+          </span>
+          Inserted {appliedCount} new feed{appliedCount === 1 ? "" : "s"} into
+          the database. Re-probe to verify they show as <strong>DUP</strong>.
+          {appliedCount === 0 && " (Either everything was already in the DB, or the live probe found no working URLs.)"}
+        </div>
+      )}
 
       <Card>
         <form action={probe}>
@@ -195,7 +217,7 @@ export default function FeedsImportPage() {
             </table>
           </div>
 
-          {newCount > 0 && !applied && (
+          {newCount > 0 && (
             <Card>
               <form action={apply}>
                 <Button type="submit">
@@ -203,41 +225,14 @@ export default function FeedsImportPage() {
                   database
                 </Button>
                 <p className="text-xs text-muted mt-2">
-                  Inserts as <code>is_active = true</code>. Existing feeds in
-                  the database are untouched.
+                  Re-probes live during the action (about 30s), then inserts
+                  every URL that returned items and isn&apos;t already in the
+                  feeds table.
                 </p>
               </form>
             </Card>
           )}
         </>
-      )}
-
-      {applied && (
-        <Card>
-          <h2 className="text-[11px] font-sans font-medium uppercase tracking-label text-muted mb-2">Applied</h2>
-          <p className="text-sm text-muted mb-3">
-            {applied.filter((a) => a.inserted).length} of {applied.length}{" "}
-            inserted. (Any not inserted hit a unique-URL conflict and were
-            silently skipped.)
-          </p>
-          <ul className="space-y-1 text-sm">
-            {applied.map((a) => (
-              <li key={a.url}>
-                <span
-                  className={
-                    "inline-block min-w-12 text-[10px] font-sans font-medium uppercase tracking-label px-2 py-0.5 border mr-2 " +
-                    (a.inserted
-                      ? "border-rule text-ink bg-panel"
-                      : "border-rule text-muted bg-panel")
-                  }
-                >
-                  {a.inserted ? "NEW" : "SKIP"}
-                </span>
-                {a.name}
-              </li>
-            ))}
-          </ul>
-        </Card>
       )}
     </div>
   );
