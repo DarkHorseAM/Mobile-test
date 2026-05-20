@@ -26,6 +26,15 @@ export const SEED_FEEDS: { name: string; url: string; tier: string }[] = [
   { name: "Evening Standard", url: "https://www.standard.co.uk/rss", tier: "regional" },
   { name: "Yorkshire Post", url: "https://www.yorkshirepost.co.uk/news/rss", tier: "regional" },
   { name: "Belfast Telegraph", url: "https://www.belfasttelegraph.co.uk/news/rss/", tier: "regional" },
+  { name: "The Northern Echo", url: "https://www.thenorthernecho.co.uk/news/rss/", tier: "regional" },
+  { name: "The Star (Sheffield)", url: "https://www.thestar.co.uk/news/rss", tier: "regional" },
+  { name: "Yorkshire Evening Post", url: "https://www.yorkshireeveningpost.co.uk/news/rss", tier: "regional" },
+  { name: "Lancashire Post", url: "https://www.lep.co.uk/news/rss", tier: "regional" },
+  { name: "The Argus (Brighton)", url: "https://www.theargus.co.uk/news/rss/", tier: "regional" },
+  { name: "The News (Portsmouth)", url: "https://www.portsmouth.co.uk/news/rss", tier: "regional" },
+  { name: "The Scotsman", url: "https://www.scotsman.com/news/rss", tier: "regional" },
+  { name: "Edinburgh Evening News", url: "https://www.edinburghnews.scotsman.com/news/rss", tier: "regional" },
+  { name: "Herald Scotland", url: "https://www.heraldscotland.com/news/rss/", tier: "regional" },
 
   // National gap-fillers (added in feed-list expansion)
   { name: "HuffPost UK", url: "https://www.huffingtonpost.co.uk/feeds/index.xml", tier: "broadsheet" },
