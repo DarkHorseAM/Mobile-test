@@ -2,9 +2,22 @@ import { db } from "@/lib/db/client";
 import { patterns } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { Badge, Button, Card, Input, Label } from "@/components/ui/ui";
 
 export const dynamic = "force-dynamic";
+
+// Reject regex shapes that are known to cause catastrophic backtracking
+// (ReDoS). Conservative heuristic — catches the common footguns; not a
+// formal proof of safety.
+function isUnsafeRegex(source: string): boolean {
+  if (source.length > 300) return true;
+  // Nested quantifiers — the classic backtracking trap, e.g. (a+)+ , (a*)*
+  if (/\([^)]*[+*][^)]*\)[+*?]/.test(source)) return true;
+  // Quantified alternation that can overlap, e.g. (a|a)+ , (a|ab)*
+  if (/\([^)]*\|[^)]*\)[+*]/.test(source)) return true;
+  return false;
+}
 
 async function addPattern(formData: FormData) {
   "use server";
@@ -15,7 +28,10 @@ async function addPattern(formData: FormData) {
   try {
     new RegExp(regex);
   } catch {
-    return;
+    redirect("/config/patterns?error=invalid_regex");
+  }
+  if (isUnsafeRegex(regex)) {
+    redirect("/config/patterns?error=unsafe_regex");
   }
   await db
     .insert(patterns)
@@ -39,12 +55,24 @@ async function deletePattern(formData: FormData) {
   revalidatePath("/config/patterns");
 }
 
-export default async function PatternsConfigPage() {
+export default async function PatternsConfigPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
   const indicators = await db
     .select()
     .from(patterns)
     .where(eq(patterns.kind, "indicator"))
     .orderBy(patterns.label);
+
+  const errorMessage =
+    error === "invalid_regex"
+      ? "That regex couldn't be parsed."
+      : error === "unsafe_regex"
+        ? "That regex was rejected as potentially unsafe (nested quantifiers or overlapping alternation can cause catastrophic backtracking and lock up the scanner). Rewrite it without nested + or * inside a group."
+        : null;
 
   return (
     <div className="space-y-8">
@@ -55,6 +83,12 @@ export default async function PatternsConfigPage() {
           pattern flags the article as PR-shaped and stores it.
         </p>
       </div>
+
+      {errorMessage && (
+        <div className="border border-accent bg-panel p-3 text-sm text-accent">
+          {errorMessage}
+        </div>
+      )}
 
       <Card>
         <form action={addPattern} className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
