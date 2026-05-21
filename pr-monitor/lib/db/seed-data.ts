@@ -2,10 +2,18 @@ export const SEED_FEEDS: { name: string; url: string; tier: string }[] = [
   // National tabloids
   { name: "Daily Mail", url: "https://www.dailymail.co.uk/articles.rss", tier: "tabloid" },
   { name: "The Sun", url: "https://www.thesun.co.uk/feed/", tier: "tabloid" },
-  { name: "Daily Mirror", url: "https://www.mirror.co.uk/?service=rss", tier: "tabloid" },
   { name: "Daily Express", url: "https://www.express.co.uk/posts/rss/1", tier: "tabloid" },
   { name: "Metro", url: "https://metro.co.uk/feed/", tier: "tabloid" },
-  { name: "Daily Star", url: "https://www.dailystar.co.uk/?service=rss", tier: "tabloid" },
+
+  // Reach plc titles via Google News (their direct RSS endpoints are
+  // 403'd network-wide; Google News indexing is the fallback. Headline
+  // only — no article lede in the summary — so pattern matching is
+  // weaker on these.)
+  { name: "Daily Mirror (via Google News)", url: "https://news.google.com/rss/search?q=site:mirror.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "tabloid" },
+  { name: "Daily Star (via Google News)", url: "https://news.google.com/rss/search?q=site:dailystar.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "tabloid" },
+  { name: "Manchester Evening News (via Google News)", url: "https://news.google.com/rss/search?q=site:manchestereveningnews.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "regional" },
+  { name: "Liverpool Echo (via Google News)", url: "https://news.google.com/rss/search?q=site:liverpoolecho.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "regional" },
+  { name: "Birmingham Live (via Google News)", url: "https://news.google.com/rss/search?q=site:birminghammail.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "regional" },
 
   // National broadsheets
   { name: "The Guardian", url: "https://www.theguardian.com/uk/rss", tier: "broadsheet" },
@@ -17,12 +25,9 @@ export const SEED_FEEDS: { name: string; url: string; tier: string }[] = [
   { name: "BBC News (UK)", url: "https://feeds.bbci.co.uk/news/uk/rss.xml", tier: "broadcaster" },
   { name: "BBC News (Business)", url: "https://feeds.bbci.co.uk/news/business/rss.xml", tier: "broadcaster" },
   { name: "Sky News (UK)", url: "https://feeds.skynews.com/feeds/rss/uk.xml", tier: "broadcaster" },
-  { name: "ITV News", url: "https://www.itv.com/news/index.rss", tier: "broadcaster" },
+  { name: "ITV News (via Google News)", url: "https://news.google.com/rss/search?q=site:itv.com/news&hl=en-GB&gl=GB&ceid=GB:en", tier: "broadcaster" },
 
   // Regional / lifestyle
-  { name: "Manchester Evening News", url: "https://www.manchestereveningnews.co.uk/?service=rss", tier: "regional" },
-  { name: "Liverpool Echo", url: "https://www.liverpoolecho.co.uk/?service=rss", tier: "regional" },
-  { name: "Birmingham Live", url: "https://www.birminghammail.co.uk/?service=rss", tier: "regional" },
   { name: "Evening Standard", url: "https://www.standard.co.uk/rss", tier: "regional" },
   { name: "Yorkshire Post", url: "https://www.yorkshirepost.co.uk/news/rss", tier: "regional" },
   { name: "Belfast Telegraph", url: "https://www.belfasttelegraph.co.uk/news/rss/", tier: "regional" },
