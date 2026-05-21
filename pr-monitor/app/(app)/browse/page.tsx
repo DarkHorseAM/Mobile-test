@@ -3,6 +3,7 @@ import {
   getArticleMatches,
   listFeedsForFilter,
   listIndicatorPatternsForFilter,
+  countUnreviewed,
 } from "@/lib/db/queries";
 import { Badge, Button, Card, Input, Label } from "@/components/ui/ui";
 import { RunScanButton } from "@/components/run-scan-button";
@@ -17,6 +18,7 @@ type SP = {
   from?: string;
   to?: string;
   page?: string;
+  verified?: string;
 };
 
 function toArray(v: string | string[] | undefined): string[] {
@@ -35,19 +37,22 @@ export default async function BrowsePage({
 
   const outlets = toArray(sp.outlet);
   const patternSlugs = toArray(sp.pattern);
+  const verifiedOnly = sp.verified === "1";
 
-  const [{ rows, total }, allFeeds, allPatterns] = await Promise.all([
+  const [{ rows, total }, allFeeds, allPatterns, unreviewedCount] = await Promise.all([
     listArticles({
       q: sp.q,
       outlets,
       patternSlugs,
       from: sp.from ? new Date(sp.from) : undefined,
       to: sp.to ? new Date(sp.to + "T23:59:59Z") : undefined,
+      verifyState: verifiedOnly ? "verified" : undefined,
       limit: pageSize,
       offset: (page - 1) * pageSize,
     }),
     listFeedsForFilter(),
     listIndicatorPatternsForFilter(),
+    countUnreviewed(),
   ]);
 
   const matchMap = await getArticleMatches(rows.map((r) => r.id));
@@ -57,6 +62,7 @@ export default async function BrowsePage({
     ...(sp.q ? { q: sp.q } : {}),
     ...(sp.from ? { from: sp.from } : {}),
     ...(sp.to ? { to: sp.to } : {}),
+    ...(verifiedOnly ? { verified: "1" } : {}),
     ...outlets.reduce((a, o, i) => ({ ...a, [`outlet${i}`]: o }), {}),
     ...patternSlugs.reduce((a, p, i) => ({ ...a, [`pattern${i}`]: p }), {}),
   }).toString()}`;
@@ -66,7 +72,18 @@ export default async function BrowsePage({
       <div className="flex items-end justify-between gap-6">
         <div>
           <h1 className="font-sans font-bold text-3xl tracking-tight">Browse Coverage</h1>
-          <p className="mt-1 text-sm text-muted">{total.toLocaleString()} matching articles</p>
+          <p className="mt-1 text-sm text-muted">
+            {total.toLocaleString()} matching article{total === 1 ? "" : "s"}
+            {verifiedOnly && " · filtered to verified PR"}
+            {unreviewedCount > 0 && (
+              <>
+                {" · "}
+                <Link href="/admin/verify" className="hover:text-accent hover:underline">
+                  {unreviewedCount.toLocaleString()} unreviewed →
+                </Link>
+              </>
+            )}
+          </p>
         </div>
         <div className="flex gap-2">
           <a href={exportHref}>
@@ -122,7 +139,17 @@ export default async function BrowsePage({
               </select>
             </div>
           </div>
-          <div className="md:col-span-6 flex gap-2">
+          <div className="md:col-span-6 flex items-center gap-4">
+            <label className="flex items-center gap-2 text-xs font-mono text-ink cursor-pointer">
+              <input
+                type="checkbox"
+                name="verified"
+                value="1"
+                defaultChecked={verifiedOnly}
+                className="accent-accent"
+              />
+              Verified PR only
+            </label>
             <Button type="submit">Apply filters</Button>
             <Link
               href="/browse"
@@ -160,6 +187,13 @@ export default async function BrowsePage({
                 </td>
                 <td className="p-3 truncate">{r.outlet}</td>
                 <td className="p-3 break-words">
+                  {r.verifiedPr === true && (
+                    <span
+                      title="Verified digital PR"
+                      aria-label="Verified digital PR"
+                      className="inline-block w-2 h-2 bg-accent mr-2 align-middle"
+                    />
+                  )}
                   <a className="hover:text-accent hover:underline" href={r.url} target="_blank" rel="noreferrer">
                     {r.headline}
                   </a>
@@ -201,6 +235,7 @@ function Pagination({
     if (sp.q) params.set("q", sp.q);
     if (sp.from) params.set("from", sp.from);
     if (sp.to) params.set("to", sp.to);
+    if (sp.verified) params.set("verified", sp.verified);
     toArray(sp.outlet).forEach((o) => params.append("outlet", o));
     toArray(sp.pattern).forEach((s) => params.append("pattern", s));
     params.set("page", String(p));
