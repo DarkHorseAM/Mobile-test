@@ -1,17 +1,17 @@
-// Alternate Reach plc URL patterns to test after the publisher blocked
-// our existing ?service=rss endpoints. Daily Express and Metro (both
-// Reach plc) work fine with /posts/rss/1 and /feed/ respectively, so
-// /feed/ is the most-likely-to-work pattern across the rest of their
-// network.
+// Google News RSS fallback feeds for outlets whose direct RSS endpoints
+// fail. Trade-off: Google News only ships the headline + a wrapped link
+// in the description, so pattern matching is weaker than on direct feeds
+// (no article lede to scan). Acceptable as a fallback to recover some
+// coverage from major outlets we'd otherwise have none of.
 //
-// Re-probe at /admin/feeds-import, then click Apply. The "old" failing
-// URLs (e.g. mirror.co.uk/?service=rss) stay in the DB unless you also
-// disable them via /config/feeds — they won't conflict because the URL
-// is different.
+// After Apply, also disable the corresponding direct-URL rows in
+// /config/feeds: Daily Mirror, Daily Star, Manchester Evening News,
+// Liverpool Echo, Birmingham Live, ITV News.
 export const FEED_CANDIDATES: { name: string; url: string; tier: string }[] = [
-  { name: "Daily Mirror", url: "https://www.mirror.co.uk/feed/", tier: "tabloid" },
-  { name: "Daily Star", url: "https://www.dailystar.co.uk/feed/", tier: "tabloid" },
-  { name: "Manchester Evening News", url: "https://www.manchestereveningnews.co.uk/feed/", tier: "regional" },
-  { name: "Liverpool Echo", url: "https://www.liverpoolecho.co.uk/feed/", tier: "regional" },
-  { name: "Birmingham Live", url: "https://www.birminghammail.co.uk/feed/", tier: "regional" },
+  { name: "Daily Mirror (via Google News)", url: "https://news.google.com/rss/search?q=site:mirror.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "tabloid" },
+  { name: "Daily Star (via Google News)", url: "https://news.google.com/rss/search?q=site:dailystar.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "tabloid" },
+  { name: "Manchester Evening News (via Google News)", url: "https://news.google.com/rss/search?q=site:manchestereveningnews.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "regional" },
+  { name: "Liverpool Echo (via Google News)", url: "https://news.google.com/rss/search?q=site:liverpoolecho.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "regional" },
+  { name: "Birmingham Live (via Google News)", url: "https://news.google.com/rss/search?q=site:birminghammail.co.uk&hl=en-GB&gl=GB&ceid=GB:en", tier: "regional" },
+  { name: "ITV News (via Google News)", url: "https://news.google.com/rss/search?q=site:itv.com/news&hl=en-GB&gl=GB&ceid=GB:en", tier: "broadcaster" },
 ];
