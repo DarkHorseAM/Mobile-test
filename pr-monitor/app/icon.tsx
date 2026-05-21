@@ -13,12 +13,12 @@ export default function Icon() {
             points="0,0 64,0 64,18 60,24 56,18 52,28 48,22 44,32 40,26 36,36 32,28 28,40 24,32 20,44 16,36 12,48 8,40 4,52 0,44"
             fill="#0A0A0A"
           />
-          <g stroke="#FAFAF7" strokeWidth="3" fill="none" strokeLinecap="round">
+          <g stroke="#FAFAF7" strokeWidth="5" fill="none" strokeLinecap="round">
             <path d="M 28 50 A 12 12 0 0 0 16 38" />
             <path d="M 36 50 A 20 20 0 0 0 16 30" />
             <path d="M 44 50 A 28 28 0 0 0 16 22" />
           </g>
-          <circle cx="16" cy="50" r="3.5" fill="#FAFAF7" />
+          <circle cx="16" cy="50" r="4.5" fill="#FAFAF7" />
         </svg>
       </div>
     ),
