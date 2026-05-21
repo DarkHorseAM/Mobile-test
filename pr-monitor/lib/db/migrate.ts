@@ -61,6 +61,24 @@ export async function runMigration(): Promise<MigrationStep[]> {
     await db.execute(sql`ALTER TABLE articles DROP COLUMN IF EXISTS brand`);
   });
 
+  await run("ALTER articles ADD COLUMN verified_pr", async () => {
+    await db.execute(
+      sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS verified_pr BOOLEAN`,
+    );
+  });
+
+  await run("ALTER articles ADD COLUMN verified_at", async () => {
+    await db.execute(
+      sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS verified_at TIMESTAMPTZ`,
+    );
+  });
+
+  await run("CREATE INDEX articles_verified_idx", async () => {
+    await db.execute(
+      sql`CREATE INDEX IF NOT EXISTS articles_verified_idx ON articles (verified_pr)`,
+    );
+  });
+
   return steps;
 }
 

@@ -27,6 +27,7 @@ export async function GET(req: Request) {
     to: sp.get("to") ? new Date(sp.get("to")! + "T23:59:59Z") : undefined,
     outlets: outlets.length ? outlets : undefined,
     patternSlugs: patternSlugs.length ? patternSlugs : undefined,
+    verifyState: sp.get("verified") === "1" ? "verified" : undefined,
     limit: 500,
   });
 

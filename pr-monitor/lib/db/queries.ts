@@ -1,6 +1,8 @@
 import { db } from "./client";
 import { articles, matches, patterns, feeds } from "./schema";
-import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, isNotNull, isNull, lte, sql } from "drizzle-orm";
+
+export type VerifyState = "unreviewed" | "verified" | "rejected" | "reviewed" | "any";
 
 export type ArticleFilters = {
   from?: Date;
@@ -9,6 +11,7 @@ export type ArticleFilters = {
   patternSlugs?: string[];
   q?: string;
   hidden?: boolean;
+  verifyState?: VerifyState;
   limit?: number;
   offset?: number;
 };
@@ -23,6 +26,10 @@ function buildWhere(f: ArticleFilters) {
       sql`(${articles.headline} ilike ${"%" + f.q + "%"} or ${articles.summary} ilike ${"%" + f.q + "%"})`,
     );
   }
+  if (f.verifyState === "verified") where.push(eq(articles.verifiedPr, true));
+  else if (f.verifyState === "rejected") where.push(eq(articles.verifiedPr, false));
+  else if (f.verifyState === "unreviewed") where.push(isNull(articles.verifiedPr));
+  else if (f.verifyState === "reviewed") where.push(isNotNull(articles.verifiedPr));
   return and(...where);
 }
 
@@ -54,6 +61,7 @@ export async function listArticles(f: ArticleFilters) {
       headline: articles.headline,
       summary: articles.summary,
       publishedAt: articles.publishedAt,
+      verifiedPr: articles.verifiedPr,
     })
     .from(articles)
     .where(filtered)
@@ -67,6 +75,23 @@ export async function listArticles(f: ArticleFilters) {
     .where(filtered);
 
   return { rows, total: count };
+}
+
+export async function countUnreviewed(): Promise<number> {
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(articles)
+    .where(and(eq(articles.hidden, false), isNull(articles.verifiedPr)));
+  return count;
+}
+
+export async function setVerifyState(articleId: number, state: "verified" | "rejected" | "unreviewed") {
+  const value = state === "verified" ? true : state === "rejected" ? false : null;
+  const verifiedAt = state === "unreviewed" ? null : new Date();
+  await db
+    .update(articles)
+    .set({ verifiedPr: value, verifiedAt })
+    .where(eq(articles.id, articleId));
 }
 
 export async function getArticleMatches(articleIds: number[]) {
