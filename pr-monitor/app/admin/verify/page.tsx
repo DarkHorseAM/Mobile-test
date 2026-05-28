@@ -174,6 +174,12 @@ export default async function VerifyPage({
                       </span>
                       <span className="text-muted">·</span>
                       <span className="font-sans font-medium">{r.outlet}</span>
+                      {r.byline && (
+                        <>
+                          <span className="text-muted">·</span>
+                          <span className="text-muted">by {r.byline}</span>
+                        </>
+                      )}
                       {status === "verified" && (
                         <span className="text-[10px] font-sans font-medium uppercase tracking-label px-2 py-0.5 border border-accent text-accent bg-panel">
                           Verified PR

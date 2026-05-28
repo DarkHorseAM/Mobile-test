@@ -75,6 +75,7 @@ export async function runScan(): Promise<ScanResult> {
           headline: item.headline,
           summary: item.summary,
           publishedAt: item.publishedAt,
+          byline: item.byline,
         })
         .onConflictDoNothing({ target: articles.url })
         .returning({ id: articles.id });
