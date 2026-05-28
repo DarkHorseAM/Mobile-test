@@ -79,6 +79,18 @@ export async function runMigration(): Promise<MigrationStep[]> {
     );
   });
 
+  await run("ALTER articles ADD COLUMN byline", async () => {
+    await db.execute(
+      sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS byline TEXT`,
+    );
+  });
+
+  await run("CREATE INDEX articles_byline_idx", async () => {
+    await db.execute(
+      sql`CREATE INDEX IF NOT EXISTS articles_byline_idx ON articles (byline)`,
+    );
+  });
+
   return steps;
 }
 

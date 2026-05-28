@@ -41,12 +41,14 @@ export const articles = pgTable(
     hidden: boolean("hidden").notNull().default(false),
     verifiedPr: boolean("verified_pr"),
     verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    byline: text("byline"),
   },
   (t) => ({
     urlIdx: uniqueIndex("articles_url_idx").on(t.url),
     publishedIdx: index("articles_published_idx").on(t.publishedAt),
     outletIdx: index("articles_outlet_idx").on(t.outlet),
     verifiedIdx: index("articles_verified_idx").on(t.verifiedPr),
+    bylineIdx: index("articles_byline_idx").on(t.byline),
   }),
 );
 

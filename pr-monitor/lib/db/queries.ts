@@ -12,6 +12,7 @@ export type ArticleFilters = {
   q?: string;
   hidden?: boolean;
   verifyState?: VerifyState;
+  byline?: string;
   limit?: number;
   offset?: number;
 };
@@ -30,6 +31,7 @@ function buildWhere(f: ArticleFilters) {
   else if (f.verifyState === "rejected") where.push(eq(articles.verifiedPr, false));
   else if (f.verifyState === "unreviewed") where.push(isNull(articles.verifiedPr));
   else if (f.verifyState === "reviewed") where.push(isNotNull(articles.verifiedPr));
+  if (f.byline) where.push(eq(articles.byline, f.byline));
   return and(...where);
 }
 
@@ -62,6 +64,7 @@ export async function listArticles(f: ArticleFilters) {
       summary: articles.summary,
       publishedAt: articles.publishedAt,
       verifiedPr: articles.verifiedPr,
+      byline: articles.byline,
     })
     .from(articles)
     .where(filtered)
@@ -92,6 +95,39 @@ export async function setVerifyState(articleId: number, state: "verified" | "rej
     .update(articles)
     .set({ verifiedPr: value, verifiedAt })
     .where(eq(articles.id, articleId));
+}
+
+export type JournalistRow = {
+  byline: string;
+  outlet: string;
+  storyCount: number;
+  lastSeen: Date | null;
+};
+
+export async function listJournalists(): Promise<JournalistRow[]> {
+  const rows = await db
+    .select({
+      byline: articles.byline,
+      outlet: articles.outlet,
+      storyCount: sql<number>`count(*)::int`,
+      lastSeen: sql<Date | null>`max(${articles.publishedAt})`,
+    })
+    .from(articles)
+    .where(
+      and(
+        eq(articles.verifiedPr, true),
+        eq(articles.hidden, false),
+        isNotNull(articles.byline),
+      ),
+    )
+    .groupBy(articles.byline, articles.outlet)
+    .orderBy(sql`count(*) desc`, sql`max(${articles.publishedAt}) desc`);
+  return rows.map((r) => ({
+    byline: r.byline ?? "",
+    outlet: r.outlet,
+    storyCount: r.storyCount,
+    lastSeen: r.lastSeen,
+  }));
 }
 
 export async function getArticleMatches(articleIds: number[]) {

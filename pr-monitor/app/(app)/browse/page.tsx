@@ -19,6 +19,7 @@ type SP = {
   to?: string;
   page?: string;
   verified?: string;
+  byline?: string;
 };
 
 function toArray(v: string | string[] | undefined): string[] {
@@ -47,6 +48,7 @@ export default async function BrowsePage({
       from: sp.from ? new Date(sp.from) : undefined,
       to: sp.to ? new Date(sp.to + "T23:59:59Z") : undefined,
       verifyState: verifiedOnly ? "verified" : undefined,
+      byline: sp.byline,
       limit: pageSize,
       offset: (page - 1) * pageSize,
     }),
@@ -75,6 +77,12 @@ export default async function BrowsePage({
           <p className="mt-1 text-sm text-muted">
             {total.toLocaleString()} matching article{total === 1 ? "" : "s"}
             {verifiedOnly && " · filtered to verified PR"}
+            {sp.byline && (
+              <>
+                {" · byline = "}
+                <span className="text-ink font-mono">{sp.byline}</span>
+              </>
+            )}
             {unreviewedCount > 0 && (
               <>
                 {" · "}
@@ -197,7 +205,13 @@ export default async function BrowsePage({
                   <a className="hover:text-accent hover:underline" href={r.url} target="_blank" rel="noreferrer">
                     {r.headline}
                   </a>
-                  {r.summary && <div className="text-xs text-muted mt-1 line-clamp-2 break-words">{r.summary}</div>}
+                  {(r.byline || r.summary) && (
+                    <div className="text-xs text-muted mt-1 line-clamp-2 break-words">
+                      {r.byline && <span className="text-ink">by {r.byline}</span>}
+                      {r.byline && r.summary && " · "}
+                      {r.summary}
+                    </div>
+                  )}
                 </td>
                 <td className="p-3">
                   <div className="flex flex-wrap gap-1">
@@ -236,6 +250,7 @@ function Pagination({
     if (sp.from) params.set("from", sp.from);
     if (sp.to) params.set("to", sp.to);
     if (sp.verified) params.set("verified", sp.verified);
+    if (sp.byline) params.set("byline", sp.byline);
     toArray(sp.outlet).forEach((o) => params.append("outlet", o));
     toArray(sp.pattern).forEach((s) => params.append("pattern", s));
     params.set("page", String(p));

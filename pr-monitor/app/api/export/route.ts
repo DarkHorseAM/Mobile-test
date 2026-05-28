@@ -33,7 +33,7 @@ export async function GET(req: Request) {
 
   const matchMap = await getArticleMatches(rows.map((r) => r.id));
 
-  const header = ["published_at", "outlet", "headline", "patterns", "url"];
+  const header = ["published_at", "outlet", "byline", "headline", "patterns", "url"];
   const lines = [header.join(",")];
   for (const r of rows) {
     const patterns = (matchMap.get(r.id) ?? []).map((m) => m.label).join("; ");
@@ -41,6 +41,7 @@ export async function GET(req: Request) {
       [
         r.publishedAt ? new Date(r.publishedAt).toISOString() : "",
         r.outlet,
+        r.byline ?? "",
         r.headline,
         patterns,
         r.url,
