@@ -3,8 +3,10 @@ const BROWSER_UA =
 
 const FETCH_TIMEOUT_MS = 8000;
 
+import { extractBylineWithLlm } from "./llm-byline";
+
 export type BylineFetchResult =
-  | { ok: true; byline: string | null; source: "meta" | "jsonld" | "dom" | null; htmlExcerpt: string | null; httpStatus: number; bytes: number }
+  | { ok: true; byline: string | null; source: "meta" | "jsonld" | "dom" | "llm" | null; htmlExcerpt: string | null; httpStatus: number; bytes: number }
   | { ok: false; error: string };
 
 export async function fetchByline(articleUrl: string): Promise<BylineFetchResult> {
@@ -46,11 +48,15 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
   const domName = extractDomByline(haystack);
   if (domName) return { ok: true, byline: cleanByline(domName), source: "dom", htmlExcerpt: null, httpStatus, bytes };
 
-  // Extraction failed - build a diagnostic excerpt focused on the
-  // markup our parser inspects (meta tags + JSON-LD blocks + DOM
-  // pattern signals) rather than raw HTML, which would be dominated
-  // by inline analytics scripts.
+  // All regex/DOM heuristics came up empty. Build the diagnostic
+  // excerpt and hand it to Gemini as a last-resort extractor. If
+  // GEMINI_API_KEY isn't configured, this is a no-op and we record
+  // null as before.
   const htmlExcerpt = buildDiagnosticExcerpt(haystack);
+  const llm = await extractBylineWithLlm(htmlExcerpt);
+  if (llm.byline) {
+    return { ok: true, byline: cleanByline(llm.byline), source: "llm", htmlExcerpt: null, httpStatus, bytes };
+  }
 
   return { ok: true, byline: null, source: null, htmlExcerpt, httpStatus, bytes };
 }

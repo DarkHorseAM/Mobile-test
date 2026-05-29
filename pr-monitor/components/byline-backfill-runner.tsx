@@ -28,7 +28,7 @@ type DebugResponse = {
     | {
         ok: true;
         byline: string | null;
-        source: "meta" | "jsonld" | null;
+        source: "meta" | "jsonld" | "dom" | "llm" | null;
         htmlExcerpt: string | null;
         httpStatus: number;
         bytes: number;
