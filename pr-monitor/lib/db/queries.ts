@@ -97,6 +97,31 @@ export async function setVerifyState(articleId: number, state: "verified" | "rej
     .where(eq(articles.id, articleId));
 }
 
+export async function countArticlesNeedingByline(): Promise<number> {
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(articles)
+    .where(and(eq(articles.hidden, false), isNull(articles.byline)));
+  return count;
+}
+
+export async function listArticlesNeedingByline(limit: number) {
+  return db
+    .select({
+      id: articles.id,
+      url: articles.url,
+      outlet: articles.outlet,
+    })
+    .from(articles)
+    .where(and(eq(articles.hidden, false), isNull(articles.byline)))
+    .orderBy(desc(articles.publishedAt))
+    .limit(limit);
+}
+
+export async function updateArticleByline(id: number, byline: string | null) {
+  await db.update(articles).set({ byline }).where(eq(articles.id, id));
+}
+
 export type JournalistRow = {
   byline: string;
   outlet: string;
