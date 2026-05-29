@@ -92,6 +92,16 @@ function extractDomByline(haystack: string): string | null {
     if (looksLikeName(txt)) return txt;
   }
 
+  // Element whose class name contains "author" (e.g. "author-name",
+  // "post-author", "article__author")
+  const authorClassMatch = haystack.match(
+    /<(?:span|div|p|a|h\d)[^>]*\bclass\s*=\s*["'][^"']*\bauthor(?:[-_][a-z]+)?[^"']*["'][^>]*>([\s\S]{0,500}?)<\/(?:span|div|p|a|h\d)>/i,
+  );
+  if (authorClassMatch) {
+    const txt = stripTags(authorClassMatch[1]).replace(/^\s*by\s+/i, "");
+    if (looksLikeName(txt)) return txt;
+  }
+
   return null;
 }
 
@@ -131,8 +141,53 @@ function buildDiagnosticExcerpt(haystack: string): string {
   parts.push("");
   parts.push(`-- ${ldBlocks.length} JSON-LD block${ldBlocks.length === 1 ? "" : "s"} --`);
   for (const [i, b] of ldBlocks.entries()) {
-    const content = b[1].replace(/\s+/g, " ").trim().slice(0, 800);
-    parts.push(`[${i + 1}] ${content}${b[1].length > 800 ? " …" : ""}`);
+    const raw = b[1].trim();
+    let parsed: unknown;
+    let parseError: string | null = null;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      parseError = (e as Error).message.slice(0, 200);
+    }
+
+    if (parseError) {
+      parts.push(`[${i + 1}] ${raw.length} chars — PARSE ERROR: ${parseError}`);
+      parts.push(`     raw (first 600): ${raw.slice(0, 600)}`);
+      continue;
+    }
+
+    parts.push(`[${i + 1}] ${raw.length} chars, parsed OK`);
+    const objs = Array.isArray(parsed) ? parsed : [parsed];
+    for (let oi = 0; oi < Math.min(objs.length, 5); oi++) {
+      const o = objs[oi];
+      if (o && typeof o === "object") {
+        const obj = o as Record<string, unknown>;
+        const type = obj["@type"] ?? "?";
+        const keys = Object.keys(obj);
+        parts.push(`     [${oi}] @type=${JSON.stringify(type)} keys=[${keys.join(", ")}]`);
+        for (const k of ["author", "creator", "publisher"]) {
+          if (k in obj) {
+            parts.push(`         ${k} = ${JSON.stringify(obj[k]).slice(0, 400)}`);
+          }
+        }
+        if ("@graph" in obj && Array.isArray(obj["@graph"])) {
+          parts.push(`         @graph has ${(obj["@graph"] as unknown[]).length} items`);
+          for (const item of (obj["@graph"] as unknown[]).slice(0, 4)) {
+            if (item && typeof item === "object") {
+              const it = item as Record<string, unknown>;
+              const subType = it["@type"] ?? "?";
+              const subKeys = Object.keys(it);
+              parts.push(`           - @type=${JSON.stringify(subType)} keys=[${subKeys.join(", ")}]`);
+              for (const k of ["author", "creator"]) {
+                if (k in it) {
+                  parts.push(`               ${k} = ${JSON.stringify(it[k]).slice(0, 400)}`);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   // DOM pattern signals — confirms whether common byline DOM
@@ -164,8 +219,18 @@ function buildDiagnosticExcerpt(haystack: string): string {
       parts.push(sample[0].slice(0, 400));
     }
   }
+  if (authorClassCount > 0) {
+    const sample = haystack.match(
+      /<[^>]+\bclass\s*=\s*["'][^"']*\bauthor[^"']*["'][^>]*>[\s\S]{0,300}/i,
+    );
+    if (sample) {
+      parts.push("");
+      parts.push("First class~author match:");
+      parts.push(sample[0].slice(0, 400));
+    }
+  }
 
-  return parts.join("\n").slice(0, 12000);
+  return parts.join("\n").slice(0, 15000);
 }
 
 function extractMetaAuthor(html: string): string | null {
@@ -212,16 +277,23 @@ function walkForAuthor(node: unknown, depth = 0): string | null {
   if (typeof node !== "object") return null;
   const obj = node as Record<string, unknown>;
 
-  // Direct author property — handle string, object, or array
-  if ("author" in obj) {
-    const a = obj.author;
-    const name = authorToName(a);
-    if (name) return name;
+  // Direct author / creator property — handle string, object, or array
+  for (const key of ["author", "creator"]) {
+    if (key in obj) {
+      const name = authorToName(obj[key]);
+      if (name) return name;
+    }
   }
 
   // @graph wrapper — recurse
   if ("@graph" in obj) {
     const n = walkForAuthor(obj["@graph"], depth + 1);
+    if (n) return n;
+  }
+
+  // Some sites nest the NewsArticle inside mainEntity
+  if ("mainEntity" in obj) {
+    const n = walkForAuthor(obj["mainEntity"], depth + 1);
     if (n) return n;
   }
 
