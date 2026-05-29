@@ -32,6 +32,8 @@ type DebugResponse = {
         htmlExcerpt: string | null;
         httpStatus: number;
         bytes: number;
+        llmModel: string | null;
+        llmAttempts: { model: string; outcome: string }[] | null;
       }
     | { ok: false; error: string };
 };
@@ -296,9 +298,35 @@ export function BylineBackfillRunner({ initialRemaining }: { initialRemaining: n
                     {debugResult.result.source && (
                       <span className="ml-2 text-[10px] font-sans font-medium uppercase tracking-label text-accent">
                         from {debugResult.result.source}
+                        {debugResult.result.source === "llm" && debugResult.result.llmModel && ` · ${debugResult.result.llmModel}`}
                       </span>
                     )}
                   </div>
+                  {debugResult.result.llmAttempts && debugResult.result.llmAttempts.length > 0 && (
+                    <div className="text-xs">
+                      <div className="text-[11px] font-sans font-medium uppercase tracking-label text-muted mb-1">
+                        LLM cycle
+                      </div>
+                      <ul className="font-mono space-y-0.5">
+                        {debugResult.result.llmAttempts.map((a, i) => (
+                          <li key={i}>
+                            <span className="text-muted">{a.model}</span>{" "}
+                            <span
+                              className={
+                                a.outcome === "name"
+                                  ? "text-accent"
+                                  : a.outcome === "NONE"
+                                    ? "text-muted"
+                                    : "text-accent"
+                              }
+                            >
+                              → {a.outcome}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   {debugResult.result.htmlExcerpt && (
                     <details className="text-xs" open>
                       <summary className="cursor-pointer text-accent text-[10px] font-sans font-medium uppercase tracking-label">
