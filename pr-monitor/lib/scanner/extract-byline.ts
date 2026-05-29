@@ -138,6 +138,18 @@ function extractDomByline(haystack: string): string | null {
     if (looksLikeName(txt)) return txt;
   }
 
+  // Plain-text "By [Name]" anywhere in the markup. Common on Wordpress
+  // and SPA sites that render bylines as visible text rather than in
+  // metadata. Conservative regex: starts at a word boundary preceded
+  // by whitespace or HTML, requires 2-4 capitalised words.
+  const byTextMatch = haystack.match(
+    /(?:^|>|\s)By\s+([A-Z][a-zA-Z'-]+(?:\s+[A-Z][a-zA-Z'-]+){1,3})\b/,
+  );
+  if (byTextMatch) {
+    const txt = byTextMatch[1].trim();
+    if (looksLikeName(txt)) return txt;
+  }
+
   return null;
 }
 
@@ -264,6 +276,40 @@ function buildDiagnosticExcerpt(haystack: string): string {
       parts.push("First class~author match:");
       parts.push(sample[0].slice(0, 400));
     }
+  }
+
+  // Context windows around the first few "author" mentions. Useful
+  // when machine-readable signals (meta/JSON-LD/DOM classes) are
+  // absent but the byline still exists somewhere in the markup as
+  // plain text or in a less-obvious attribute. Also gives Gemini
+  // real content to reason over, not just counts.
+  if (authorMentions > 0) {
+    const regex = /\bauthor\b/gi;
+    const contexts: string[] = [];
+    let m: RegExpExecArray | null;
+    while ((m = regex.exec(haystack)) !== null && contexts.length < 6) {
+      const start = Math.max(0, m.index - 120);
+      const end = Math.min(haystack.length, m.index + 200);
+      const ctx = haystack.slice(start, end).replace(/\s+/g, " ").trim();
+      contexts.push(ctx);
+    }
+    if (contexts.length > 0) {
+      parts.push("");
+      parts.push(`-- Context around first ${contexts.length} "author" mentions --`);
+      contexts.forEach((c, i) => parts.push(`[${i + 1}] …${c}…`));
+    }
+  }
+
+  // Plain-text "By [Name]" matches anywhere in the markup. Includes
+  // false positives like "By Tomorrow" — let the LLM (or human)
+  // judge which is real.
+  const byMatches = [
+    ...haystack.matchAll(/(?:^|>|\s)By\s+([A-Z][a-zA-Z'-]+(?:\s+[A-Z][a-zA-Z'-]+){1,3})\b/g),
+  ].slice(0, 6);
+  if (byMatches.length > 0) {
+    parts.push("");
+    parts.push(`-- "By [Name]" pattern matches: ${byMatches.length} --`);
+    byMatches.forEach((m, i) => parts.push(`[${i + 1}] By ${m[1]}`));
   }
 
   return parts.join("\n").slice(0, 15000);
