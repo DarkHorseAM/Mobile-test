@@ -4,7 +4,7 @@ const BROWSER_UA =
 const FETCH_TIMEOUT_MS = 8000;
 
 export type BylineFetchResult =
-  | { ok: true; byline: string | null; source: "meta" | "jsonld" | null; htmlExcerpt: string | null; httpStatus: number; bytes: number }
+  | { ok: true; byline: string | null; source: "meta" | "jsonld" | "dom" | null; htmlExcerpt: string | null; httpStatus: number; bytes: number }
   | { ok: false; error: string };
 
 export async function fetchByline(articleUrl: string): Promise<BylineFetchResult> {
@@ -28,10 +28,11 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
     return { ok: false, error: (e as Error).message.slice(0, 200) };
   }
 
-  // Search the head + first 200KB of body — bylines are always in
-  // <head> meta tags or in JSON-LD that follows shortly after. Avoids
-  // parsing huge article bodies.
-  const haystack = html.slice(0, 200_000);
+  // Cap haystack at 500KB to keep memory bounded but still cover
+  // article body content on heavy publisher pages. Bylines on sites
+  // like The Sun aren't in head metadata at all and only appear as
+  // DOM elements past the 200KB analytics blob.
+  const haystack = html.slice(0, 500_000);
 
   const httpStatus = 200; // fetch.ok was true above
   const bytes = html.length;
@@ -42,13 +43,76 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
   const metaName = extractMetaAuthor(haystack);
   if (metaName) return { ok: true, byline: cleanByline(metaName), source: "meta", htmlExcerpt: null, httpStatus, bytes };
 
+  const domName = extractDomByline(haystack);
+  if (domName) return { ok: true, byline: cleanByline(domName), source: "dom", htmlExcerpt: null, httpStatus, bytes };
+
   // Extraction failed - build a diagnostic excerpt focused on the
-  // markup our parser inspects (meta tags + JSON-LD blocks) rather
-  // than raw HTML head, which would otherwise be dominated by inline
-  // analytics scripts.
+  // markup our parser inspects (meta tags + JSON-LD blocks + DOM
+  // pattern signals) rather than raw HTML, which would be dominated
+  // by inline analytics scripts.
   const htmlExcerpt = buildDiagnosticExcerpt(haystack);
 
   return { ok: true, byline: null, source: null, htmlExcerpt, httpStatus, bytes };
+}
+
+function extractDomByline(haystack: string): string | null {
+  // <a rel="author">Name</a> - the most reliable DOM signal.
+  const relMatches = haystack.matchAll(
+    /<a\b[^>]*\brel\s*=\s*["']author["'][^>]*>([\s\S]*?)<\/a>/gi,
+  );
+  for (const m of relMatches) {
+    const txt = stripTags(m[1]);
+    if (looksLikeName(txt)) return txt;
+  }
+
+  // itemprop="author" - Schema.org microdata. Author element wraps
+  // either text directly or a nested itemprop="name".
+  const itempropMatch = haystack.match(
+    /<[^>]+\bitemprop\s*=\s*["']author["'][^>]*>([\s\S]{0,800}?)<\/(?:span|div|a|p)>/i,
+  );
+  if (itempropMatch) {
+    const nameMatch = itempropMatch[1].match(
+      /<[^>]+\bitemprop\s*=\s*["']name["'][^>]*>([\s\S]{0,200}?)</i,
+    );
+    if (nameMatch) {
+      const txt = stripTags(nameMatch[1]);
+      if (looksLikeName(txt)) return txt;
+    }
+    const txt = stripTags(itempropMatch[1]);
+    if (looksLikeName(txt)) return txt;
+  }
+
+  // Element whose class name contains "byline" — text content stripped
+  // of HTML and "By " prefix.
+  const bylineClassMatch = haystack.match(
+    /<(?:span|div|p|a|h\d)[^>]*\bclass\s*=\s*["'][^"']*\bbyline[^"']*["'][^>]*>([\s\S]{0,500}?)<\/(?:span|div|p|a|h\d)>/i,
+  );
+  if (bylineClassMatch) {
+    const txt = stripTags(bylineClassMatch[1]).replace(/^\s*by\s+/i, "");
+    if (looksLikeName(txt)) return txt;
+  }
+
+  return null;
+}
+
+function stripTags(s: string): string {
+  return s
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function looksLikeName(s: string): boolean {
+  if (!s) return false;
+  if (s.length < 2 || s.length > 150) return false;
+  // Reject obvious non-names like "Read more", "Comments", "@handle".
+  if (/^[@#]/.test(s)) return false;
+  if (/^(read more|comments?|share|reply|like)$/i.test(s)) return false;
+  // Must contain at least one letter
+  if (!/[a-z]/i.test(s)) return false;
+  return true;
 }
 
 function buildDiagnosticExcerpt(haystack: string): string {
@@ -71,14 +135,37 @@ function buildDiagnosticExcerpt(haystack: string): string {
     parts.push(`[${i + 1}] ${content}${b[1].length > 800 ? " …" : ""}`);
   }
 
-  // Quick string-search check: does the word "author" appear anywhere
-  // in the head/markup? If yes but we didn't extract one, it's
-  // probably in a DOM pattern we don't recognise yet.
+  // DOM pattern signals — confirms whether common byline DOM
+  // structures exist on the page at all. Helps diagnose whether to
+  // add new extraction patterns or accept that this publisher just
+  // doesn't publish the byline in scrapable form.
+  const relAuthorCount = (haystack.match(/\brel\s*=\s*["']author["']/gi) ?? []).length;
+  const bylineClassCount = (haystack.match(/class\s*=\s*["'][^"']*\bbyline\b[^"']*["']/gi) ?? []).length;
+  const authorClassCount = (haystack.match(/class\s*=\s*["'][^"']*\bauthor\b[^"']*["']/gi) ?? []).length;
+  const itempropAuthorCount = (haystack.match(/\bitemprop\s*=\s*["']author["']/gi) ?? []).length;
   const authorMentions = (haystack.match(/\bauthor\b/gi) ?? []).length;
   parts.push("");
-  parts.push(`-- "author" mentions in haystack: ${authorMentions} --`);
+  parts.push("-- DOM pattern signals --");
+  parts.push(`rel="author":      ${relAuthorCount}`);
+  parts.push(`itemprop="author": ${itempropAuthorCount}`);
+  parts.push(`class~byline:      ${bylineClassCount}`);
+  parts.push(`class~author:      ${authorClassCount}`);
+  parts.push(`"author" anywhere: ${authorMentions}`);
 
-  return parts.join("\n").slice(0, 8000);
+  // Sample the first byline-class match if present, so we can see the
+  // exact markup if our extractor isn't catching it.
+  if (bylineClassCount > 0) {
+    const sample = haystack.match(
+      /<[^>]+\bclass\s*=\s*["'][^"']*\bbyline[^"']*["'][^>]*>[\s\S]{0,300}/i,
+    );
+    if (sample) {
+      parts.push("");
+      parts.push("First class~byline match:");
+      parts.push(sample[0].slice(0, 400));
+    }
+  }
+
+  return parts.join("\n").slice(0, 12000);
 }
 
 function extractMetaAuthor(html: string): string | null {
