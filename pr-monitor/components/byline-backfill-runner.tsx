@@ -3,6 +3,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/ui";
 
+type Sample = {
+  outlet: string;
+  url: string;
+  byline: string | null;
+  error: string | null;
+  htmlExcerpt: string | null;
+};
+
 type BatchResponse = {
   processed: number;
   withByline: number;
@@ -10,8 +18,22 @@ type BatchResponse = {
   errored: number;
   remaining: number;
   durationMs: number;
-  samples: { outlet: string; byline: string | null; error: string | null }[];
+  samples: Sample[];
   failuresByOutlet: { outlet: string; count: number; message: string }[];
+};
+
+type DebugResponse = {
+  url: string;
+  result:
+    | {
+        ok: true;
+        byline: string | null;
+        source: "meta" | "jsonld" | null;
+        htmlExcerpt: string | null;
+        httpStatus: number;
+        bytes: number;
+      }
+    | { ok: false; error: string };
 };
 
 const PAUSE_BETWEEN_BATCHES_MS = 1500;
@@ -29,6 +51,10 @@ export function BylineBackfillRunner({ initialRemaining }: { initialRemaining: n
   });
   const [lastBatch, setLastBatch] = useState<BatchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [debugUrl, setDebugUrl] = useState("");
+  const [debugResult, setDebugResult] = useState<DebugResponse | null>(null);
+  const [debugRunning, setDebugRunning] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   async function runOne(): Promise<BatchResponse | null> {
     try {
@@ -85,6 +111,33 @@ export function BylineBackfillRunner({ initialRemaining }: { initialRemaining: n
     setRunning(false);
   }
 
+  async function resetAttempts() {
+    if (!confirm("Re-queue all articles that previously came back with no byline? Articles where you've already captured a byline are not affected.")) return;
+    setResetting(true);
+    try {
+      const res = await fetch("/api/byline-backfill/reset", { method: "POST" });
+      const data = (await res.json()) as { requeued: number };
+      setRemaining((r) => r + data.requeued);
+    } catch (e) {
+      setError(`Reset failed: ${(e as Error).message}`);
+    }
+    setResetting(false);
+  }
+
+  async function runDebug() {
+    if (!debugUrl.trim()) return;
+    setDebugRunning(true);
+    setDebugResult(null);
+    try {
+      const res = await fetch(`/api/byline-debug?url=${encodeURIComponent(debugUrl.trim())}`);
+      const data = (await res.json()) as DebugResponse;
+      setDebugResult(data);
+    } catch (e) {
+      setError(`Debug probe failed: ${(e as Error).message}`);
+    }
+    setDebugRunning(false);
+  }
+
   async function runSingle() {
     setRunning(true);
     setError(null);
@@ -128,6 +181,14 @@ export function BylineBackfillRunner({ initialRemaining }: { initialRemaining: n
             </Button>
           ) : (
             <>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={resetAttempts}
+                disabled={resetting}
+              >
+                {resetting ? "Resetting…" : "Reset failed attempts"}
+              </Button>
               <Button type="button" variant="outline" onClick={runSingle} disabled={done}>
                 {done ? "All done" : "Run one batch"}
               </Button>
@@ -170,25 +231,90 @@ export function BylineBackfillRunner({ initialRemaining }: { initialRemaining: n
           <div className="px-5 py-3 border-b border-rule text-[11px] font-sans font-medium uppercase tracking-label text-muted">
             Latest batch sample
           </div>
-          <ul className="divide-y divide-rule text-sm font-mono">
+          <ul className="divide-y divide-rule text-sm">
             {lastBatch.samples.map((s, i) => (
-              <li
-                key={i}
-                className="px-5 py-2 flex items-baseline justify-between gap-4"
-              >
-                <span className="font-sans font-medium text-xs">{s.outlet}</span>
-                {s.byline ? (
-                  <span className="text-ink">{s.byline}</span>
-                ) : s.error ? (
-                  <span className="text-accent text-xs">{s.error}</span>
-                ) : (
-                  <span className="text-muted text-xs">no byline in page</span>
+              <li key={i} className="px-5 py-2 space-y-2">
+                <div className="flex items-baseline justify-between gap-4 font-mono">
+                  <span className="font-sans font-medium text-xs">{s.outlet}</span>
+                  {s.byline ? (
+                    <span className="text-ink">{s.byline}</span>
+                  ) : s.error ? (
+                    <span className="text-accent text-xs">{s.error}</span>
+                  ) : (
+                    <span className="text-muted text-xs">no byline in page</span>
+                  )}
+                </div>
+                {s.htmlExcerpt && (
+                  <details className="text-xs">
+                    <summary className="cursor-pointer text-accent text-[10px] font-sans font-medium uppercase tracking-label">
+                      Show head of returned HTML
+                    </summary>
+                    <pre className="mt-2 p-3 bg-paper border border-rule text-[11px] font-mono whitespace-pre-wrap break-all max-h-72 overflow-auto">
+                      {s.htmlExcerpt}
+                    </pre>
+                  </details>
                 )}
               </li>
             ))}
           </ul>
         </div>
       )}
+
+      <div className="bg-panel border border-rule overflow-hidden">
+        <div className="px-5 py-3 border-b border-rule text-[11px] font-sans font-medium uppercase tracking-label text-muted">
+          Probe a single URL
+        </div>
+        <div className="p-4 space-y-3">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={debugUrl}
+              onChange={(e) => setDebugUrl(e.target.value)}
+              placeholder="https://www.example.com/article/..."
+              className="flex-1 h-9 bg-panel border border-rule px-3 text-sm font-mono text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            />
+            <Button type="button" onClick={runDebug} disabled={debugRunning || !debugUrl.trim()}>
+              {debugRunning ? "Fetching…" : "Probe"}
+            </Button>
+          </div>
+          {debugResult && (
+            <div className="text-sm space-y-2">
+              {!debugResult.result.ok ? (
+                <div className="text-accent font-mono text-xs">Error: {debugResult.result.error}</div>
+              ) : (
+                <>
+                  <div className="font-mono text-xs text-muted">
+                    HTTP {debugResult.result.httpStatus} · {debugResult.result.bytes.toLocaleString()} bytes
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-sans font-medium uppercase tracking-label text-muted mr-2">Byline</span>
+                    {debugResult.result.byline ? (
+                      <span className="font-mono">{debugResult.result.byline}</span>
+                    ) : (
+                      <span className="text-muted">not found</span>
+                    )}
+                    {debugResult.result.source && (
+                      <span className="ml-2 text-[10px] font-sans font-medium uppercase tracking-label text-accent">
+                        from {debugResult.result.source}
+                      </span>
+                    )}
+                  </div>
+                  {debugResult.result.htmlExcerpt && (
+                    <details className="text-xs">
+                      <summary className="cursor-pointer text-accent text-[10px] font-sans font-medium uppercase tracking-label">
+                        Show head of returned HTML ({debugResult.result.htmlExcerpt.length} chars)
+                      </summary>
+                      <pre className="mt-2 p-3 bg-paper border border-rule text-[11px] font-mono whitespace-pre-wrap break-all max-h-96 overflow-auto">
+                        {debugResult.result.htmlExcerpt}
+                      </pre>
+                    </details>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
       {lastBatch && lastBatch.failuresByOutlet.length > 0 && (
         <div className="bg-panel border border-rule overflow-hidden">
