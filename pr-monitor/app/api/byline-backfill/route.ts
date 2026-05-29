@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   countArticlesNeedingByline,
   listArticlesNeedingByline,
-  updateArticleByline,
+  recordBylineAttempt,
 } from "@/lib/db/queries";
 import { fetchByline } from "@/lib/scanner/extract-byline";
 
@@ -38,29 +38,60 @@ export async function POST() {
   let withByline = 0;
   let noByline = 0;
   let errored = 0;
-  const samples: { outlet: string; byline: string | null; error: string | null }[] = [];
+  const samples: {
+    outlet: string;
+    url: string;
+    byline: string | null;
+    error: string | null;
+    htmlExcerpt: string | null;
+  }[] = [];
   const failuresMap = new Map<string, { count: number; message: string }>();
 
   for (const { article, res } of results) {
     if (res.ok) {
-      await updateArticleByline(article.id, res.byline);
+      await recordBylineAttempt(article.id, res.byline);
       if (res.byline) {
         withByline += 1;
         if (samples.length < 8) {
-          samples.push({ outlet: article.outlet, byline: res.byline, error: null });
+          samples.push({
+            outlet: article.outlet,
+            url: article.url,
+            byline: res.byline,
+            error: null,
+            htmlExcerpt: null,
+          });
         }
       } else {
         noByline += 1;
+        if (samples.length < 8) {
+          samples.push({
+            outlet: article.outlet,
+            url: article.url,
+            byline: null,
+            error: null,
+            htmlExcerpt: res.htmlExcerpt,
+          });
+        }
       }
     } else {
       errored += 1;
+      // Mark errored articles as attempted too — most failures here
+      // are publisher 403s that won't resolve on retry. Use Reset to
+      // re-queue everything if the extractor or fetch strategy changes.
+      await recordBylineAttempt(article.id, null);
       const prev = failuresMap.get(article.outlet);
       failuresMap.set(article.outlet, {
         count: (prev?.count ?? 0) + 1,
         message: res.error,
       });
       if (samples.length < 8) {
-        samples.push({ outlet: article.outlet, byline: null, error: res.error });
+        samples.push({
+          outlet: article.outlet,
+          url: article.url,
+          byline: null,
+          error: res.error,
+          htmlExcerpt: null,
+        });
       }
     }
   }

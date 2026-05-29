@@ -42,6 +42,7 @@ export const articles = pgTable(
     verifiedPr: boolean("verified_pr"),
     verifiedAt: timestamp("verified_at", { withTimezone: true }),
     byline: text("byline"),
+    bylineFetchedAt: timestamp("byline_fetched_at", { withTimezone: true }),
   },
   (t) => ({
     urlIdx: uniqueIndex("articles_url_idx").on(t.url),

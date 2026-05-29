@@ -4,7 +4,7 @@ const BROWSER_UA =
 const FETCH_TIMEOUT_MS = 8000;
 
 export type BylineFetchResult =
-  | { ok: true; byline: string | null; source: "meta" | "jsonld" | null }
+  | { ok: true; byline: string | null; source: "meta" | "jsonld" | null; htmlExcerpt: string | null; httpStatus: number; bytes: number }
   | { ok: false; error: string };
 
 export async function fetchByline(articleUrl: string): Promise<BylineFetchResult> {
@@ -33,13 +33,20 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
   // parsing huge article bodies.
   const haystack = html.slice(0, 200_000);
 
+  // Capture the head for diagnostics so we can see what publisher
+  // markup we're up against when extraction fails.
+  const headMatch = haystack.match(/<head\b[\s\S]{0,30000}?<\/head>/i);
+  const htmlExcerpt = (headMatch?.[0] ?? haystack.slice(0, 3000)).slice(0, 3000);
+  const httpStatus = 200; // fetch.ok was true above
+  const bytes = html.length;
+
   const jsonLdName = extractJsonLdAuthor(haystack);
-  if (jsonLdName) return { ok: true, byline: cleanByline(jsonLdName), source: "jsonld" };
+  if (jsonLdName) return { ok: true, byline: cleanByline(jsonLdName), source: "jsonld", htmlExcerpt: null, httpStatus, bytes };
 
   const metaName = extractMetaAuthor(haystack);
-  if (metaName) return { ok: true, byline: cleanByline(metaName), source: "meta" };
+  if (metaName) return { ok: true, byline: cleanByline(metaName), source: "meta", htmlExcerpt: null, httpStatus, bytes };
 
-  return { ok: true, byline: null, source: null };
+  return { ok: true, byline: null, source: null, htmlExcerpt, httpStatus, bytes };
 }
 
 function extractMetaAuthor(html: string): string | null {

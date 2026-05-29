@@ -91,6 +91,12 @@ export async function runMigration(): Promise<MigrationStep[]> {
     );
   });
 
+  await run("ALTER articles ADD COLUMN byline_fetched_at", async () => {
+    await db.execute(
+      sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS byline_fetched_at TIMESTAMPTZ`,
+    );
+  });
+
   return steps;
 }
 

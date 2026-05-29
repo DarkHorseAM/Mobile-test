@@ -101,7 +101,13 @@ export async function countArticlesNeedingByline(): Promise<number> {
   const [{ count }] = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(articles)
-    .where(and(eq(articles.hidden, false), isNull(articles.byline)));
+    .where(
+      and(
+        eq(articles.hidden, false),
+        isNull(articles.byline),
+        isNull(articles.bylineFetchedAt),
+      ),
+    );
   return count;
 }
 
@@ -113,13 +119,31 @@ export async function listArticlesNeedingByline(limit: number) {
       outlet: articles.outlet,
     })
     .from(articles)
-    .where(and(eq(articles.hidden, false), isNull(articles.byline)))
+    .where(
+      and(
+        eq(articles.hidden, false),
+        isNull(articles.byline),
+        isNull(articles.bylineFetchedAt),
+      ),
+    )
     .orderBy(desc(articles.publishedAt))
     .limit(limit);
 }
 
-export async function updateArticleByline(id: number, byline: string | null) {
-  await db.update(articles).set({ byline }).where(eq(articles.id, id));
+export async function recordBylineAttempt(id: number, byline: string | null) {
+  await db
+    .update(articles)
+    .set({ byline, bylineFetchedAt: new Date() })
+    .where(eq(articles.id, id));
+}
+
+export async function resetBylineAttempts(): Promise<number> {
+  const res = await db
+    .update(articles)
+    .set({ bylineFetchedAt: null })
+    .where(and(isNull(articles.byline), isNotNull(articles.bylineFetchedAt)))
+    .returning({ id: articles.id });
+  return res.length;
 }
 
 export type JournalistRow = {
