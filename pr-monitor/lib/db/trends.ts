@@ -1,22 +1,34 @@
 import { db } from "./client";
 import { articles, matches, patterns } from "./schema";
-import { and, desc, eq, gte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, sql, SQL } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
-export async function topOutlets(since: Date, limit = 10) {
+function baseFilters(since: Date, to: Date | null, verifiedOnly: boolean): SQL[] {
+  const filters: SQL[] = [
+    gte(articles.publishedAt, since),
+    eq(articles.hidden, false),
+  ];
+  if (to) filters.push(sql`${articles.publishedAt} < ${to}`);
+  if (verifiedOnly) filters.push(eq(articles.verifiedPr, true));
+  return filters;
+}
+
+export async function topOutlets(since: Date, opts: { verifiedOnly?: boolean; limit?: number } = {}) {
+  const { verifiedOnly = false, limit = 10 } = opts;
   return db
     .select({
       outlet: articles.outlet,
       count: sql<number>`count(*)::int`,
     })
     .from(articles)
-    .where(and(gte(articles.publishedAt, since), eq(articles.hidden, false)))
+    .where(and(...baseFilters(since, null, verifiedOnly)))
     .groupBy(articles.outlet)
     .orderBy(desc(sql`count(*)`))
     .limit(limit);
 }
 
-export async function topPatterns(since: Date, limit = 10) {
+export async function topPatterns(since: Date, opts: { verifiedOnly?: boolean; limit?: number } = {}) {
+  const { verifiedOnly = false, limit = 10 } = opts;
   return db
     .select({
       slug: patterns.slug,
@@ -26,13 +38,18 @@ export async function topPatterns(since: Date, limit = 10) {
     .from(matches)
     .innerJoin(patterns, eq(patterns.id, matches.patternId))
     .innerJoin(articles, eq(articles.id, matches.articleId))
-    .where(and(gte(articles.publishedAt, since), eq(articles.hidden, false)))
+    .where(and(...baseFilters(since, null, verifiedOnly)))
     .groupBy(patterns.slug, patterns.label)
     .orderBy(desc(sql`count(*)`))
     .limit(limit);
 }
 
-export async function patternCountsForRange(from: Date, to: Date) {
+export async function patternCountsForRange(
+  from: Date,
+  to: Date,
+  opts: { verifiedOnly?: boolean } = {},
+) {
+  const { verifiedOnly = false } = opts;
   return db
     .select({
       slug: patterns.slug,
@@ -42,13 +59,7 @@ export async function patternCountsForRange(from: Date, to: Date) {
     .from(matches)
     .innerJoin(patterns, eq(patterns.id, matches.patternId))
     .innerJoin(articles, eq(articles.id, matches.articleId))
-    .where(
-      and(
-        gte(articles.publishedAt, from),
-        sql`${articles.publishedAt} < ${to}`,
-        eq(articles.hidden, false),
-      ),
-    )
+    .where(and(...baseFilters(from, to, verifiedOnly)))
     .groupBy(patterns.slug, patterns.label);
 }
 
@@ -59,14 +70,14 @@ const STOPWORDS = new Set([
 // The tokenize-and-count is the slowest thing on the Trends page —
 // every render fetches all headlines for the window into memory and
 // re-counts them. Cache for an hour, keyed on the since-rounded-to-hour
-// so the cache key is stable across closely-spaced requests.
+// plus the verifiedOnly flag so the two views don't share cache entries.
 const _cachedHeadlineWordFrequencies = unstable_cache(
-  async (sinceHourMs: number, limit: number) => {
+  async (sinceHourMs: number, limit: number, verifiedOnly: boolean) => {
     const since = new Date(sinceHourMs);
     const rows = await db
       .select({ headline: articles.headline })
       .from(articles)
-      .where(and(gte(articles.publishedAt, since), eq(articles.hidden, false)));
+      .where(and(...baseFilters(since, null, verifiedOnly)));
 
     const counts = new Map<string, number>();
     for (const r of rows) {
@@ -85,8 +96,12 @@ const _cachedHeadlineWordFrequencies = unstable_cache(
   { revalidate: 3600 },
 );
 
-export async function headlineWordFrequencies(since: Date, limit = 60) {
+export async function headlineWordFrequencies(
+  since: Date,
+  opts: { verifiedOnly?: boolean; limit?: number } = {},
+) {
+  const { verifiedOnly = false, limit = 60 } = opts;
   const HOUR_MS = 60 * 60 * 1000;
   const sinceHourMs = Math.floor(since.getTime() / HOUR_MS) * HOUR_MS;
-  return _cachedHeadlineWordFrequencies(sinceHourMs, limit);
+  return _cachedHeadlineWordFrequencies(sinceHourMs, limit, verifiedOnly);
 }

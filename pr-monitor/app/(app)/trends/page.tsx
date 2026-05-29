@@ -15,17 +15,27 @@ function daysAgo(n: number) {
   return d;
 }
 
-export default async function TrendsPage() {
+type SP = { verified?: string };
+
+export default async function TrendsPage({
+  searchParams,
+}: {
+  searchParams: Promise<SP>;
+}) {
+  const sp = await searchParams;
+  const verifiedOnly = sp.verified === "1";
+  const opts = { verifiedOnly };
+
   const now = new Date();
   const sevenDays = daysAgo(7);
   const fourteenDays = daysAgo(14);
 
   const [outlets, pats, thisWeek, lastWeek, words] = await Promise.all([
-    topOutlets(sevenDays),
-    topPatterns(sevenDays),
-    patternCountsForRange(sevenDays, now),
-    patternCountsForRange(fourteenDays, sevenDays),
-    headlineWordFrequencies(sevenDays),
+    topOutlets(sevenDays, opts),
+    topPatterns(sevenDays, opts),
+    patternCountsForRange(sevenDays, now, opts),
+    patternCountsForRange(fourteenDays, sevenDays, opts),
+    headlineWordFrequencies(sevenDays, opts),
   ]);
 
   const lastWeekMap = new Map(lastWeek.map((r) => [r.slug, r.count]));
@@ -40,14 +50,42 @@ export default async function TrendsPage() {
     .slice(0, 12);
 
   const maxWord = words[0]?.count ?? 1;
+  const browseQuery = verifiedOnly ? "verified=1&" : "";
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-sans font-bold text-3xl tracking-tight">Trends</h1>
-        <p className="mt-1 text-sm text-muted">
-          Last 7 days — where PR is landing right now. Click anything to filter the Browse view.
-        </p>
+      <div className="flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <h1 className="font-sans font-bold text-3xl tracking-tight">Trends</h1>
+          <p className="mt-1 text-sm text-muted">
+            Last 7 days — where {verifiedOnly ? "verified digital PR" : "PR"} is
+            landing right now. Click anything to filter the Browse view.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 text-[11px] font-sans font-medium uppercase tracking-label">
+          <Link
+            href="/trends"
+            className={
+              "px-3 py-1.5 border " +
+              (!verifiedOnly
+                ? "border-accent text-accent bg-panel"
+                : "border-rule text-ink hover:border-accent")
+            }
+          >
+            All matches
+          </Link>
+          <Link
+            href="/trends?verified=1"
+            className={
+              "px-3 py-1.5 border " +
+              (verifiedOnly
+                ? "border-accent text-accent bg-panel"
+                : "border-rule text-ink hover:border-accent")
+            }
+          >
+            Verified PR only
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -63,7 +101,7 @@ export default async function TrendsPage() {
               <li key={p.slug} className="flex items-center justify-between gap-2">
                 <Link
                   className="hover:text-accent hover:underline truncate"
-                  href={`/browse?pattern=${encodeURIComponent(p.slug)}`}
+                  href={`/browse?${browseQuery}pattern=${encodeURIComponent(p.slug)}`}
                 >
                   {p.label}
                 </Link>
@@ -85,7 +123,7 @@ export default async function TrendsPage() {
               <li key={o.outlet} className="flex items-center justify-between gap-2">
                 <Link
                   className="hover:text-accent hover:underline truncate"
-                  href={`/browse?outlet=${encodeURIComponent(o.outlet)}`}
+                  href={`/browse?${browseQuery}outlet=${encodeURIComponent(o.outlet)}`}
                 >
                   {o.outlet}
                 </Link>
