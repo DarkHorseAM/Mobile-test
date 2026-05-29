@@ -33,10 +33,6 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
   // parsing huge article bodies.
   const haystack = html.slice(0, 200_000);
 
-  // Capture the head for diagnostics so we can see what publisher
-  // markup we're up against when extraction fails.
-  const headMatch = haystack.match(/<head\b[\s\S]{0,30000}?<\/head>/i);
-  const htmlExcerpt = (headMatch?.[0] ?? haystack.slice(0, 3000)).slice(0, 3000);
   const httpStatus = 200; // fetch.ok was true above
   const bytes = html.length;
 
@@ -46,7 +42,43 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
   const metaName = extractMetaAuthor(haystack);
   if (metaName) return { ok: true, byline: cleanByline(metaName), source: "meta", htmlExcerpt: null, httpStatus, bytes };
 
+  // Extraction failed - build a diagnostic excerpt focused on the
+  // markup our parser inspects (meta tags + JSON-LD blocks) rather
+  // than raw HTML head, which would otherwise be dominated by inline
+  // analytics scripts.
+  const htmlExcerpt = buildDiagnosticExcerpt(haystack);
+
   return { ok: true, byline: null, source: null, htmlExcerpt, httpStatus, bytes };
+}
+
+function buildDiagnosticExcerpt(haystack: string): string {
+  const parts: string[] = [];
+
+  const metas = haystack.match(/<meta\b[^>]*>/gi) ?? [];
+  parts.push(`-- ${metas.length} <meta> tag${metas.length === 1 ? "" : "s"} --`);
+  for (const m of metas.slice(0, 80)) parts.push(m);
+  if (metas.length > 80) parts.push(`… ${metas.length - 80} more`);
+
+  const ldBlocks = [
+    ...haystack.matchAll(
+      /<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+    ),
+  ];
+  parts.push("");
+  parts.push(`-- ${ldBlocks.length} JSON-LD block${ldBlocks.length === 1 ? "" : "s"} --`);
+  for (const [i, b] of ldBlocks.entries()) {
+    const content = b[1].replace(/\s+/g, " ").trim().slice(0, 800);
+    parts.push(`[${i + 1}] ${content}${b[1].length > 800 ? " …" : ""}`);
+  }
+
+  // Quick string-search check: does the word "author" appear anywhere
+  // in the head/markup? If yes but we didn't extract one, it's
+  // probably in a DOM pattern we don't recognise yet.
+  const authorMentions = (haystack.match(/\bauthor\b/gi) ?? []).length;
+  parts.push("");
+  parts.push(`-- "author" mentions in haystack: ${authorMentions} --`);
+
+  return parts.join("\n").slice(0, 8000);
 }
 
 function extractMetaAuthor(html: string): string | null {

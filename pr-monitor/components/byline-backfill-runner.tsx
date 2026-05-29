@@ -247,9 +247,9 @@ export function BylineBackfillRunner({ initialRemaining }: { initialRemaining: n
                 {s.htmlExcerpt && (
                   <details className="text-xs">
                     <summary className="cursor-pointer text-accent text-[10px] font-sans font-medium uppercase tracking-label">
-                      Show head of returned HTML
+                      Show meta tags + JSON-LD found
                     </summary>
-                    <pre className="mt-2 p-3 bg-paper border border-rule text-[11px] font-mono whitespace-pre-wrap break-all max-h-72 overflow-auto">
+                    <pre className="mt-2 p-3 bg-paper border border-rule text-[11px] font-mono whitespace-pre-wrap break-all max-h-96 overflow-auto">
                       {s.htmlExcerpt}
                     </pre>
                   </details>
@@ -300,11 +300,11 @@ export function BylineBackfillRunner({ initialRemaining }: { initialRemaining: n
                     )}
                   </div>
                   {debugResult.result.htmlExcerpt && (
-                    <details className="text-xs">
+                    <details className="text-xs" open>
                       <summary className="cursor-pointer text-accent text-[10px] font-sans font-medium uppercase tracking-label">
-                        Show head of returned HTML ({debugResult.result.htmlExcerpt.length} chars)
+                        Meta tags + JSON-LD found ({debugResult.result.htmlExcerpt.length} chars)
                       </summary>
-                      <pre className="mt-2 p-3 bg-paper border border-rule text-[11px] font-mono whitespace-pre-wrap break-all max-h-96 overflow-auto">
+                      <pre className="mt-2 p-3 bg-paper border border-rule text-[11px] font-mono whitespace-pre-wrap break-all max-h-[32rem] overflow-auto">
                         {debugResult.result.htmlExcerpt}
                       </pre>
                     </details>
