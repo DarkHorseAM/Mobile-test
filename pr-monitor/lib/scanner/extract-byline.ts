@@ -6,7 +6,16 @@ const FETCH_TIMEOUT_MS = 8000;
 import { extractBylineWithLlm } from "./llm-byline";
 
 export type BylineFetchResult =
-  | { ok: true; byline: string | null; source: "meta" | "jsonld" | "dom" | "llm" | null; htmlExcerpt: string | null; httpStatus: number; bytes: number }
+  | {
+      ok: true;
+      byline: string | null;
+      source: "meta" | "jsonld" | "dom" | "llm" | null;
+      htmlExcerpt: string | null;
+      httpStatus: number;
+      bytes: number;
+      llmModel: string | null;
+      llmAttempts: { model: string; outcome: string }[] | null;
+    }
   | { ok: false; error: string };
 
 export async function fetchByline(articleUrl: string): Promise<BylineFetchResult> {
@@ -40,13 +49,16 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
   const bytes = html.length;
 
   const jsonLdName = extractJsonLdAuthor(haystack);
-  if (jsonLdName) return { ok: true, byline: cleanByline(jsonLdName), source: "jsonld", htmlExcerpt: null, httpStatus, bytes };
+  if (jsonLdName)
+    return { ok: true, byline: cleanByline(jsonLdName), source: "jsonld", htmlExcerpt: null, httpStatus, bytes, llmModel: null, llmAttempts: null };
 
   const metaName = extractMetaAuthor(haystack);
-  if (metaName) return { ok: true, byline: cleanByline(metaName), source: "meta", htmlExcerpt: null, httpStatus, bytes };
+  if (metaName)
+    return { ok: true, byline: cleanByline(metaName), source: "meta", htmlExcerpt: null, httpStatus, bytes, llmModel: null, llmAttempts: null };
 
   const domName = extractDomByline(haystack);
-  if (domName) return { ok: true, byline: cleanByline(domName), source: "dom", htmlExcerpt: null, httpStatus, bytes };
+  if (domName)
+    return { ok: true, byline: cleanByline(domName), source: "dom", htmlExcerpt: null, httpStatus, bytes, llmModel: null, llmAttempts: null };
 
   // All regex/DOM heuristics came up empty. Build the diagnostic
   // excerpt and hand it to Gemini as a last-resort extractor. If
@@ -55,10 +67,28 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
   const htmlExcerpt = buildDiagnosticExcerpt(haystack);
   const llm = await extractBylineWithLlm(htmlExcerpt);
   if (llm.byline) {
-    return { ok: true, byline: cleanByline(llm.byline), source: "llm", htmlExcerpt: null, httpStatus, bytes };
+    return {
+      ok: true,
+      byline: cleanByline(llm.byline),
+      source: "llm",
+      htmlExcerpt: null,
+      httpStatus,
+      bytes,
+      llmModel: llm.modelUsed,
+      llmAttempts: llm.attempts,
+    };
   }
 
-  return { ok: true, byline: null, source: null, htmlExcerpt, httpStatus, bytes };
+  return {
+    ok: true,
+    byline: null,
+    source: null,
+    htmlExcerpt,
+    httpStatus,
+    bytes,
+    llmModel: null,
+    llmAttempts: llm.attempts.length > 0 ? llm.attempts : null,
+  };
 }
 
 function extractDomByline(haystack: string): string | null {
