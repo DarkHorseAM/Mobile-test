@@ -102,7 +102,19 @@ export default async function BrowsePage({
       </div>
 
       <Card>
-        <form method="get" className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+        <form
+          key={JSON.stringify({
+            q: sp.q ?? "",
+            from: sp.from ?? "",
+            to: sp.to ?? "",
+            outlets,
+            patternSlugs,
+            verifiedOnly,
+            byline: sp.byline ?? "",
+          })}
+          method="get"
+          className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end"
+        >
           <div className="md:col-span-4">
             <Label htmlFor="q">Search headline / summary</Label>
             <Input id="q" name="q" defaultValue={sp.q ?? ""} placeholder="e.g. sleep, holiday, salary" />
@@ -118,33 +130,43 @@ export default async function BrowsePage({
           <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <Label>Outlets</Label>
-              <select
-                name="outlet"
-                multiple
-                defaultValue={outlets}
-                className="w-full bg-panel border border-rule p-2 text-sm font-mono text-ink h-28 focus:border-accent focus:outline-none"
-              >
+              <div className="bg-panel border border-rule h-40 overflow-y-auto p-2 space-y-1 focus-within:border-accent">
                 {allFeeds.map((f) => (
-                  <option key={f.name} value={f.name}>
-                    {f.name}
-                  </option>
+                  <label
+                    key={f.name}
+                    className="flex items-center gap-2 text-xs font-mono cursor-pointer hover:text-accent"
+                  >
+                    <input
+                      type="checkbox"
+                      name="outlet"
+                      value={f.name}
+                      defaultChecked={outlets.includes(f.name)}
+                      className="accent-accent"
+                    />
+                    <span className="truncate">{f.name}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
             <div>
               <Label>Patterns</Label>
-              <select
-                name="pattern"
-                multiple
-                defaultValue={patternSlugs}
-                className="w-full bg-panel border border-rule p-2 text-sm font-mono text-ink h-28 focus:border-accent focus:outline-none"
-              >
+              <div className="bg-panel border border-rule h-40 overflow-y-auto p-2 space-y-1 focus-within:border-accent">
                 {allPatterns.map((p) => (
-                  <option key={p.slug} value={p.slug}>
-                    {p.label}
-                  </option>
+                  <label
+                    key={p.slug}
+                    className="flex items-center gap-2 text-xs font-mono cursor-pointer hover:text-accent"
+                  >
+                    <input
+                      type="checkbox"
+                      name="pattern"
+                      value={p.slug}
+                      defaultChecked={patternSlugs.includes(p.slug)}
+                      className="accent-accent"
+                    />
+                    <span className="truncate">{p.label}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
           </div>
           <div className="md:col-span-6 flex items-center gap-4">
