@@ -87,7 +87,11 @@ export default async function VerifyPage({
       </div>
 
       <Card>
-        <form method="get" className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+        <form
+          key={JSON.stringify({ state, outlets, patternSlugs })}
+          method="get"
+          className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"
+        >
           <div>
             <Label htmlFor="state">State</Label>
             <select
@@ -105,33 +109,43 @@ export default async function VerifyPage({
           </div>
           <div>
             <Label>Outlets</Label>
-            <select
-              name="outlet"
-              multiple
-              defaultValue={outlets}
-              className="w-full bg-panel border border-rule p-2 text-sm font-mono text-ink h-24 focus:border-accent focus:outline-none"
-            >
+            <div className="bg-panel border border-rule h-40 overflow-y-auto p-2 space-y-1 focus-within:border-accent">
               {allFeeds.map((f) => (
-                <option key={f.name} value={f.name}>
-                  {f.name}
-                </option>
+                <label
+                  key={f.name}
+                  className="flex items-center gap-2 text-xs font-mono cursor-pointer hover:text-accent"
+                >
+                  <input
+                    type="checkbox"
+                    name="outlet"
+                    value={f.name}
+                    defaultChecked={outlets.includes(f.name)}
+                    className="accent-accent"
+                  />
+                  <span className="truncate">{f.name}</span>
+                </label>
               ))}
-            </select>
+            </div>
           </div>
           <div>
             <Label>Patterns</Label>
-            <select
-              name="pattern"
-              multiple
-              defaultValue={patternSlugs}
-              className="w-full bg-panel border border-rule p-2 text-sm font-mono text-ink h-24 focus:border-accent focus:outline-none"
-            >
+            <div className="bg-panel border border-rule h-40 overflow-y-auto p-2 space-y-1 focus-within:border-accent">
               {allPatterns.map((p) => (
-                <option key={p.slug} value={p.slug}>
-                  {p.label}
-                </option>
+                <label
+                  key={p.slug}
+                  className="flex items-center gap-2 text-xs font-mono cursor-pointer hover:text-accent"
+                >
+                  <input
+                    type="checkbox"
+                    name="pattern"
+                    value={p.slug}
+                    defaultChecked={patternSlugs.includes(p.slug)}
+                    className="accent-accent"
+                  />
+                  <span className="truncate">{p.label}</span>
+                </label>
               ))}
-            </select>
+            </div>
           </div>
           <div className="md:col-span-3 flex gap-2">
             <Button type="submit">Apply filters</Button>
