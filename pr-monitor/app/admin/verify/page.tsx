@@ -7,6 +7,7 @@ import {
   type VerifyState,
 } from "@/lib/db/queries";
 import { Badge, Button, Card, Label } from "@/components/ui/ui";
+import { CheckboxGroupControls } from "@/components/checkbox-group-controls";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 
@@ -108,7 +109,10 @@ export default async function VerifyPage({
             </select>
           </div>
           <div>
-            <Label>Outlets</Label>
+            <div className="flex items-center justify-between mb-1">
+              <Label className="mb-0">Outlets</Label>
+              <CheckboxGroupControls group="outlet" />
+            </div>
             <div className="bg-panel border border-rule h-40 overflow-y-auto p-2 space-y-1 focus-within:border-accent">
               {allFeeds.map((f) => (
                 <label
@@ -128,7 +132,10 @@ export default async function VerifyPage({
             </div>
           </div>
           <div>
-            <Label>Patterns</Label>
+            <div className="flex items-center justify-between mb-1">
+              <Label className="mb-0">Patterns</Label>
+              <CheckboxGroupControls group="pattern" />
+            </div>
             <div className="bg-panel border border-rule h-40 overflow-y-auto p-2 space-y-1 focus-within:border-accent">
               {allPatterns.map((p) => (
                 <label
