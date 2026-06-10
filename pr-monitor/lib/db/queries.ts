@@ -39,43 +39,44 @@ export async function listArticles(f: ArticleFilters) {
   const limit = Math.min(f.limit ?? 100, 500);
   const offset = f.offset ?? 0;
 
-  let articleIds: number[] | null = null;
-  if (f.patternSlugs && f.patternSlugs.length > 0) {
-    const ids = await db
-      .selectDistinct({ id: matches.articleId })
-      .from(matches)
-      .innerJoin(patterns, eq(patterns.id, matches.patternId))
-      .where(inArray(patterns.slug, f.patternSlugs));
-    articleIds = ids.map((r) => r.id);
-    if (articleIds.length === 0) return { rows: [], total: 0 };
-  }
-
   const baseWhere = buildWhere(f);
-  const filtered = articleIds
-    ? and(baseWhere, inArray(articles.id, articleIds))
-    : baseWhere;
+  const filtered =
+    f.patternSlugs && f.patternSlugs.length > 0
+      ? and(
+          baseWhere,
+          inArray(
+            articles.id,
+            db
+              .select({ id: matches.articleId })
+              .from(matches)
+              .innerJoin(patterns, eq(patterns.id, matches.patternId))
+              .where(inArray(patterns.slug, f.patternSlugs)),
+          ),
+        )
+      : baseWhere;
 
-  const rows = await db
-    .select({
-      id: articles.id,
-      url: articles.url,
-      outlet: articles.outlet,
-      headline: articles.headline,
-      summary: articles.summary,
-      publishedAt: articles.publishedAt,
-      verifiedPr: articles.verifiedPr,
-      byline: articles.byline,
-    })
-    .from(articles)
-    .where(filtered)
-    .orderBy(desc(articles.publishedAt))
-    .limit(limit)
-    .offset(offset);
-
-  const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(articles)
-    .where(filtered);
+  const [rows, [{ count }]] = await Promise.all([
+    db
+      .select({
+        id: articles.id,
+        url: articles.url,
+        outlet: articles.outlet,
+        headline: articles.headline,
+        summary: articles.summary,
+        publishedAt: articles.publishedAt,
+        verifiedPr: articles.verifiedPr,
+        byline: articles.byline,
+      })
+      .from(articles)
+      .where(filtered)
+      .orderBy(desc(articles.publishedAt))
+      .limit(limit)
+      .offset(offset),
+    db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(articles)
+      .where(filtered),
+  ]);
 
   return { rows, total: count };
 }

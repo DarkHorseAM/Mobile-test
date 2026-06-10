@@ -4,7 +4,10 @@ export const dynamic = "force-dynamic";
 
 function csvEscape(v: unknown): string {
   if (v === null || v === undefined) return "";
-  const s = String(v).replace(/\r?\n/g, " ");
+  let s = String(v).replace(/\r?\n/g, " ");
+  // Headlines/bylines come from external feeds; a leading =, +, -, @
+  // would execute as a formula when the CSV is opened in Excel/Sheets.
+  if (/^[=+\-@\t]/.test(s)) s = "'" + s;
   if (s.includes(",") || s.includes("\"")) {
     return `"${s.replace(/"/g, '""')}"`;
   }
@@ -28,6 +31,7 @@ export async function GET(req: Request) {
     outlets: outlets.length ? outlets : undefined,
     patternSlugs: patternSlugs.length ? patternSlugs : undefined,
     verifyState: sp.get("verified") === "1" ? "verified" : undefined,
+    byline: sp.get("byline") ?? undefined,
     limit: 500,
   });
 

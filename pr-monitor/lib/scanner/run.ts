@@ -52,7 +52,11 @@ export async function runScan(): Promise<ScanResult> {
     const feed = activeFeeds[i];
     const fetchResult = fetchResults[i];
     if (fetchResult.status === "rejected") {
-      result.errors.push({ feed: feed.name, message: (fetchResult.reason as Error).message });
+      const reason = fetchResult.reason;
+      result.errors.push({
+        feed: feed.name,
+        message: reason instanceof Error ? reason.message : String(reason),
+      });
       continue;
     }
     const items = fetchResult.value;
