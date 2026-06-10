@@ -20,9 +20,12 @@ export type BylineFetchResult =
 
 export async function fetchByline(articleUrl: string): Promise<BylineFetchResult> {
   let html: string;
+  // The timeout must cover the body read too — a publisher that sends
+  // headers then stalls the body would otherwise hang until the
+  // function's maxDuration.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     const res = await fetch(articleUrl, {
       redirect: "follow",
       signal: controller.signal,
@@ -32,11 +35,12 @@ export async function fetchByline(articleUrl: string): Promise<BylineFetchResult
         "Accept-Language": "en-GB,en;q=0.9",
       },
     });
-    clearTimeout(timer);
     if (!res.ok) return { ok: false, error: `HTTP ${res.status}` };
     html = await res.text();
   } catch (e) {
     return { ok: false, error: (e as Error).message.slice(0, 200) };
+  } finally {
+    clearTimeout(timer);
   }
 
   // Cap haystack at 500KB to keep memory bounded but still cover

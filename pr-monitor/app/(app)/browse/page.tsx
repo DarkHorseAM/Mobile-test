@@ -66,6 +66,7 @@ export default async function BrowsePage({
     ...(sp.from ? { from: sp.from } : {}),
     ...(sp.to ? { to: sp.to } : {}),
     ...(verifiedOnly ? { verified: "1" } : {}),
+    ...(sp.byline ? { byline: sp.byline } : {}),
     ...outlets.reduce((a, o, i) => ({ ...a, [`outlet${i}`]: o }), {}),
     ...patternSlugs.reduce((a, p, i) => ({ ...a, [`pattern${i}`]: p }), {}),
   }).toString()}`;

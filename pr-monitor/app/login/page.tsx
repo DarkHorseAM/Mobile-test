@@ -25,7 +25,9 @@ export default async function LoginPage({
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
     });
-    redirect(target.startsWith("/") ? target : "/");
+    // Only same-site paths: "//host" and "/\host" are protocol-relative
+    // redirects off-site.
+    redirect(/^\/(?![/\\])/.test(target) ? target : "/");
   }
 
   return (
