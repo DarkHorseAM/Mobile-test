@@ -104,17 +104,38 @@ def main() -> int:
     path = Path(sys.argv[1] if len(sys.argv) > 1 else "menu.json")
     menu = json.loads(path.read_text())
 
+    overlay_path = Path(__file__).with_name("bucket_contents.json")
+    overlay = json.loads(overlay_path.read_text()) if overlay_path.exists() else {}
+    overlay_items = overlay.get("items", {})
+
     seen: set[str] = set()
     items = []
+    used_groups: set[str] = set()
+    overlaid = 0
     for it in menu["items"]:
         if it["name"] in seen:
             print(f"[derive] dropping duplicate scrape of {it['name']!r} "
                   f"at £{it['price']:.2f}")
             continue
         seen.add(it["name"])
-        it["provides"] = derive(it["name"])
+        entry = overlay_items.get(clean(it["name"]))
+        if entry:
+            it["provides"] = dict(entry["provides"])
+            it["modifier_groups"] = list(entry.get("modifier_groups", []))
+            it["contents_confidence"] = entry["confidence"]
+            it["contents_source"] = entry["source"]
+            used_groups.update(it["modifier_groups"])
+            overlaid += 1
+        else:
+            it["provides"] = derive(it["name"])
         items.append(it)
     menu["items"] = items
+
+    existing = {g["id"] for g in menu.get("modifier_groups", [])}
+    for g in overlay.get("modifier_groups", []):
+        if g["id"] in used_groups and g["id"] not in existing:
+            menu.setdefault("modifier_groups", []).append(g)
+    print(f"[derive] applied sourced bucket contents to {overlaid} items")
 
     path.write_text(json.dumps(menu, indent=2, ensure_ascii=False))
     print(f"[derive] wrote provides for {len(items)} items to {path}")

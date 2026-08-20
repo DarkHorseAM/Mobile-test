@@ -98,35 +98,52 @@ def parse_wants(raw_wants: list[str]) -> dict[str, int]:
     return wants
 
 
-def match_component(want: str, component_keys: set[str]) -> str | None:
-    """Map a wanted name onto a menu component key."""
+def match_components(want: str, component_keys: set[str]) -> list[str]:
+    """Map a wanted name onto the menu component keys that satisfy it.
+
+    Picks the closest key by token overlap (every wanted token must be
+    present, fewest extras wins), then also accepts its "large" size-upgrade
+    sibling — a Large Gravy always satisfies a plain "gravy" want, but a
+    regular one never satisfies an explicit "large gravy" want.
+    """
     if want in component_keys:
-        return want
-    wt = tokens(want)
-    if not wt:
-        return None
-    # Best token-overlap match; require every wanted token to be present.
-    best, best_extra = None, None
+        best_tokens = tokens(want)
+        matched = {want}
+    else:
+        wt = tokens(want)
+        if not wt:
+            return []
+        best, best_extra = None, None
+        for key in component_keys:
+            kt = tokens(key)
+            if wt <= kt:
+                extra = len(kt - wt)
+                if best is None or extra < best_extra:
+                    best, best_extra = key, extra
+        if best is None:
+            return []
+        best_tokens = tokens(best)
+        matched = {best}
+    upgraded = best_tokens | {"large"}
     for key in component_keys:
         kt = tokens(key)
-        if wt <= kt:
-            extra = len(kt - wt)
-            if best is None or extra < best_extra:
-                best, best_extra = key, extra
-    return best
+        if kt == best_tokens or kt == upgraded:
+            matched.add(key)
+    return sorted(matched)
 
 
 def solve(menu: Menu, wants: dict[str, int], verbose: bool = False) -> dict:
     component_keys = menu.all_component_keys()
 
-    resolved: dict[str, int] = {}
+    resolved: dict[tuple[str, ...], int] = {}
     unmatched: list[str] = []
     for want, count in wants.items():
-        key = match_component(want, component_keys)
-        if key is None:
+        keys = match_components(want, component_keys)
+        if not keys:
             unmatched.append(want)
         else:
-            resolved[key] = resolved.get(key, 0) + count
+            group = tuple(keys)
+            resolved[group] = resolved.get(group, 0) + count
     if unmatched:
         return {"status": "unmatched_wants", "unmatched": unmatched,
                 "known_components": sorted(component_keys)}
@@ -170,10 +187,10 @@ def solve(menu: Menu, wants: dict[str, int], verbose: bool = False) -> dict:
             prob += chosen >= g.get("min", 0) * x[it["id"]], f"min_{it['id']}_{gid}"
             prob += chosen <= g.get("max", 1) * x[it["id"]], f"max_{it['id']}_{gid}"
 
-    # Coverage constraints
-    for comp, needed in resolved.items():
+    # Coverage constraints — any component in a want's matched group counts.
+    for comps, needed in resolved.items():
         supply = pulp.lpSum(
-            menu.item_provides(it).get(comp, 0) * x[it["id"]]
+            sum(menu.item_provides(it).get(c, 0) for c in comps) * x[it["id"]]
             for it in menu.items)
         for it in menu.items:
             for gid in it.get("modifier_groups", []):
@@ -181,9 +198,10 @@ def solve(menu: Menu, wants: dict[str, int], verbose: bool = False) -> dict:
                 if not g:
                     continue
                 supply += pulp.lpSum(
-                    menu.option_provides(o).get(comp, 0) * y[(it["id"], gid, o["id"])]
+                    sum(menu.option_provides(o).get(c, 0) for c in comps)
+                    * y[(it["id"], gid, o["id"])]
                     for o in g["options"])
-        prob += supply >= needed, f"cover_{comp}"
+        prob += supply >= needed, f"cover_{'_or_'.join(comps)}"
 
     status = prob.solve(pulp.PULP_CBC_CMD(msg=verbose))
     if pulp.LpStatus[status] != "Optimal":
@@ -214,7 +232,7 @@ def solve(menu: Menu, wants: dict[str, int], verbose: bool = False) -> dict:
 
     return {
         "status": "Optimal",
-        "wants": resolved,
+        "wants": {" | ".join(k): v for k, v in resolved.items()},
         "basket": basket,
         "total": round(pulp.value(prob.objective), 2),
     }

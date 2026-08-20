@@ -1,7 +1,7 @@
 {
   "source": "https://www.just-eat.co.uk/restaurants-kfc-loughton/menu (captured on-device 2026-08-20)",
   "extracted_from": "captures/kfc-loughton-2026-08-20.json",
-  "fetched_at": "2026-08-20T21:29:21Z",
+  "fetched_at": "2026-08-20T21:35:50Z",
   "restaurant": "KFC - Loughton (Just Eat)",
   "items": [
     {
@@ -47,11 +47,19 @@
       "description": "",
       "price": 31.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
-        "chicken_piece": 10,
+        "tender": 10,
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 4,
+        "dip": 2,
         "tandoori_dipping_feast": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "tandoori variant of the official Dipping Feast composition"
     },
     {
       "id": "4",
@@ -106,7 +114,9 @@
       "modifier_groups": [],
       "provides": {
         "hot_wing": 20
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "stated in the item name; wings-only bucket, no fries"
     },
     {
       "id": "9",
@@ -114,10 +124,19 @@
       "description": "",
       "price": 12.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "regular-side-1"
+      ],
       "provides": {
+        "mini_fillet": 3,
+        "regular_popcorn_chicken": 1,
+        "regular_signature_fries": 1,
+        "dip": 1,
+        "drink": 1,
         "boneless_banquet": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/box-meals/kfc-boneless-banquet"
     },
     {
       "id": "10",
@@ -127,10 +146,15 @@
       "category": "",
       "modifier_groups": [],
       "provides": {
-        "mighty_bucket_for_one": 1,
+        "chicken_piece": 2,
+        "tender": 2,
+        "hot_wing": 2,
         "regular_signature_fries": 1,
-        "drink": 1
-      }
+        "drink": 1,
+        "mighty_bucket_for_one": 1
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/buckets-for-one/kfc-mighty-bucket-for-one"
     },
     {
       "id": "11",
@@ -427,11 +451,19 @@
       "description": "",
       "price": 35.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
-        "chicken_piece": 14,
+        "tender": 14,
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 4,
+        "dip": 4,
         "tandoori_dipping_feast": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "tandoori variant of the official Dipping Feast composition"
     },
     {
       "id": "37",
@@ -442,8 +474,11 @@
       "modifier_groups": [],
       "provides": {
         "tender": 6,
+        "regular_signature_fries": 4,
         "tenders_bargain_bucket": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "tenders variant of the official Bargain Bucket composition"
     },
     {
       "id": "38",
@@ -454,8 +489,11 @@
       "modifier_groups": [],
       "provides": {
         "chicken_piece": 6,
+        "regular_signature_fries": 4,
         "bargain_bucket": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-6pc-bargain-bucket"
     },
     {
       "id": "39",
@@ -466,8 +504,11 @@
       "modifier_groups": [],
       "provides": {
         "tender": 10,
+        "regular_signature_fries": 4,
         "tenders_bargain_bucket": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "tenders variant of the official Bargain Bucket composition"
     },
     {
       "id": "40",
@@ -478,8 +519,11 @@
       "modifier_groups": [],
       "provides": {
         "chicken_piece": 10,
+        "regular_signature_fries": 4,
         "bargain_bucket": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-10pc-bargain-bucket"
     },
     {
       "id": "41",
@@ -490,8 +534,11 @@
       "modifier_groups": [],
       "provides": {
         "tender": 14,
+        "regular_signature_fries": 4,
         "tenders_bargain_bucket": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "tenders variant of the official Bargain Bucket composition"
     },
     {
       "id": "42",
@@ -502,8 +549,11 @@
       "modifier_groups": [],
       "provides": {
         "chicken_piece": 14,
+        "regular_signature_fries": 4,
         "bargain_bucket": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-14pc-bargain-bucket"
     },
     {
       "id": "43",
@@ -511,11 +561,17 @@
       "description": "",
       "price": 24.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "tender": 6,
+        "regular_signature_fries": 4,
         "tenders_family_feast": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "tenders variant of the official Family Feast composition"
     },
     {
       "id": "44",
@@ -523,11 +579,17 @@
       "description": "",
       "price": 24.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "chicken_piece": 6,
+        "regular_signature_fries": 4,
         "family_feast": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-6pc-family-feast"
     },
     {
       "id": "45",
@@ -535,11 +597,17 @@
       "description": "",
       "price": 30.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "tender": 10,
+        "regular_signature_fries": 4,
         "tenders_family_feast": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "tenders variant of the official Family Feast composition"
     },
     {
       "id": "46",
@@ -547,11 +615,17 @@
       "description": "",
       "price": 30.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "chicken_piece": 10,
+        "regular_signature_fries": 4,
         "family_feast": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-10pc-family-feast"
     },
     {
       "id": "47",
@@ -562,8 +636,13 @@
       "modifier_groups": [],
       "provides": {
         "chicken_piece": 6,
+        "hot_wing": 8,
+        "mini_fillet": 4,
+        "regular_signature_fries": 4,
         "wicked_variety_bucket": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-6pc-wicked-variety-bucket"
     },
     {
       "id": "48",
@@ -574,8 +653,13 @@
       "modifier_groups": [],
       "provides": {
         "chicken_piece": 10,
+        "hot_wing": 8,
+        "mini_fillet": 4,
+        "regular_signature_fries": 4,
         "wicked_variety_bucket": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-10pc-wicked-variety-bucket"
     },
     {
       "id": "49",
@@ -586,8 +670,13 @@
       "modifier_groups": [],
       "provides": {
         "chicken_piece": 14,
+        "hot_wing": 8,
+        "mini_fillet": 4,
+        "regular_signature_fries": 4,
         "wicked_variety_bucket": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "size extension of the official 6/10pc Wicked Variety composition"
     },
     {
       "id": "50",
@@ -595,11 +684,19 @@
       "description": "",
       "price": 32.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "tender": 10,
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 4,
+        "dip": 2,
         "tenders_dipping_feast": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-10pc-dipping-boneless-feast"
     },
     {
       "id": "51",
@@ -607,11 +704,19 @@
       "description": "",
       "price": 36.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "tender": 14,
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 4,
+        "dip": 4,
         "tenders_dipping_feast": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "size extension of the official Dipping Feast composition"
     },
     {
       "id": "52",
@@ -619,11 +724,20 @@
       "description": "",
       "price": 35.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "chicken_piece": 6,
+        "hot_wing": 8,
+        "tender": 8,
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 6,
         "party_bucket": 1
-      }
+      },
+      "contents_confidence": "inferred",
+      "contents_source": "size extension of the official 14pc Party Bucket composition"
     },
     {
       "id": "53",
@@ -631,11 +745,20 @@
       "description": "",
       "price": 42.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "chicken_piece": 10,
+        "hot_wing": 8,
+        "tender": 10,
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 6,
         "party_bucket": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-party-bucket"
     },
     {
       "id": "54",
@@ -643,11 +766,20 @@
       "description": "",
       "price": 49.99,
       "category": "",
-      "modifier_groups": [],
+      "modifier_groups": [
+        "large-sides-2",
+        "bottle-drink-1"
+      ],
       "provides": {
         "chicken_piece": 14,
+        "hot_wing": 8,
+        "tender": 8,
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 6,
         "party_bucket": 1
-      }
+      },
+      "contents_confidence": "official",
+      "contents_source": "https://www.kfc.co.uk/our-menu/sharing-buckets/kfc-14pc-party-bucket"
     },
     {
       "id": "55",
@@ -1738,5 +1870,178 @@
       }
     }
   ],
-  "modifier_groups": []
+  "modifier_groups": [
+    {
+      "id": "large-sides-2",
+      "name": "Choose 2 large sides",
+      "min": 2,
+      "max": 2,
+      "options": [
+        {
+          "id": "ls-gravy",
+          "name": "Large Gravy",
+          "price_delta": 0.0,
+          "provides": {
+            "large_gravy": 1
+          }
+        },
+        {
+          "id": "ls-beans",
+          "name": "Large Beans",
+          "price_delta": 0.0,
+          "provides": {
+            "large_beans": 1
+          }
+        },
+        {
+          "id": "ls-coleslaw",
+          "name": "Large Coleslaw",
+          "price_delta": 0.0,
+          "provides": {
+            "large_coleslaw": 1
+          }
+        },
+        {
+          "id": "ls-mash",
+          "name": "Large Creamy Mash",
+          "price_delta": 0.0,
+          "provides": {
+            "large_creamy_mash": 1
+          }
+        },
+        {
+          "id": "ls-rice",
+          "name": "Large Cajun Rice",
+          "price_delta": 0.0,
+          "provides": {
+            "large_cajun_rice": 1
+          }
+        },
+        {
+          "id": "ls-salad",
+          "name": "Large Side Salad",
+          "price_delta": 0.0,
+          "provides": {
+            "large_side_salad": 1
+          }
+        },
+        {
+          "id": "ls-corn",
+          "name": "Corn Cob: 2 pc",
+          "price_delta": 0.0,
+          "provides": {
+            "corn_cob": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "regular-side-1",
+      "name": "Choose a regular side",
+      "min": 1,
+      "max": 1,
+      "options": [
+        {
+          "id": "rs-gravy",
+          "name": "Regular Gravy",
+          "price_delta": 0.0,
+          "provides": {
+            "regular_gravy": 1
+          }
+        },
+        {
+          "id": "rs-beans",
+          "name": "Regular Beans",
+          "price_delta": 0.0,
+          "provides": {
+            "regular_beans": 1
+          }
+        },
+        {
+          "id": "rs-coleslaw",
+          "name": "Regular Coleslaw",
+          "price_delta": 0.0,
+          "provides": {
+            "regular_coleslaw": 1
+          }
+        },
+        {
+          "id": "rs-mash",
+          "name": "Regular Creamy Mash",
+          "price_delta": 0.0,
+          "provides": {
+            "regular_creamy_mash": 1
+          }
+        },
+        {
+          "id": "rs-rice",
+          "name": "Regular Cajun Rice",
+          "price_delta": 0.0,
+          "provides": {
+            "regular_cajun_rice": 1
+          }
+        },
+        {
+          "id": "rs-salad",
+          "name": "Regular Side Salad",
+          "price_delta": 0.0,
+          "provides": {
+            "regular_side_salad": 1
+          }
+        },
+        {
+          "id": "rs-corn",
+          "name": "Corn Cob: 1 pc",
+          "price_delta": 0.0,
+          "provides": {
+            "corn_cob": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "bottle-drink-1",
+      "name": "Choose a large bottle drink",
+      "min": 1,
+      "max": 1,
+      "options": [
+        {
+          "id": "bd-pepsimax",
+          "name": "Pepsi MAX 1.5 L Bottle",
+          "price_delta": 0.0,
+          "provides": {
+            "pepsi_max_1_5_l_bottle": 1,
+            "drink": 1
+          }
+        },
+        {
+          "id": "bd-dietpepsi",
+          "name": "Diet Pepsi 1.5 L Bottle",
+          "price_delta": 0.0,
+          "provides": {
+            "diet_pepsi_1_5_l_bottle": 1,
+            "drink": 1
+          }
+        },
+        {
+          "id": "bd-tango",
+          "name": "Tango Orange 1.5L Bottle",
+          "price_delta": 0.0,
+          "provides": {
+            "tango_orange_1_5l_bottle": 1,
+            "drink": 1
+          }
+        },
+        {
+          "id": "bd-7up",
+          "name": "7UP Free 1.5 L Bottle",
+          "price_delta": 0.0,
+          "provides": {
+            "7up_free_1_5_l_bottle": 1,
+            "drink": 1
+          }
+        }
+      ]
+    }
+  ]
 }

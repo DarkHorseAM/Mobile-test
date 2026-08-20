@@ -8,9 +8,14 @@ into the page by XHR after render (it is NOT in `__NEXT_DATA__` or any inline
 script), so it was captured with a DOM-collector bookmarklet run on a phone,
 then normalised by `fetch_menu.py --json-file` and enriched by
 `derive_provides.py`, which encodes only what item names state (": N pc"
-counts, Meal = +fries +drink, cans/bottles = drink). Bucket fries/sides are
-deliberately NOT encoded, so bucket-heavy baskets may show slightly worse
-than reality.
+counts, Meal = +fries +drink, cans/bottles = drink). On top of that,
+`bucket_contents.json` pins exact bucket/feast compositions — fries counts,
+wings, popcorn, side and bottle choices — from kfc.co.uk's own menu pages
+(checked 2026-08-20), with a per-item `confidence` flag: `official` when the
+page states it, `inferred` when a sibling size/variant's official composition
+was extended. Feast side/drink choices are modelled as modifier groups, so
+the ILP picks the sides that cover your wants. The matcher also treats a
+"large" portion as satisfying a regular want (never the reverse).
 
 Rebuild from a fresh capture:
 
