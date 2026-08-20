@@ -1,0 +1,233 @@
+<title>KFC Basket Optimiser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground: #FFFFFF;
+    --surface: #F7F2EC;
+    --ink: #221B16;
+    --muted: #6E6058;
+    --accent: #C4262E;
+    --accent-ink: #FFFFFF;
+    --line: #E4DAD1;
+    --ok: #2E7D4F;
+    --err: #B3261E;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #17120E;
+      --surface: #241D17;
+      --ink: #F3EAE2;
+      --muted: #A99A8F;
+      --accent: #E8555C;
+      --accent-ink: #1A0E0F;
+      --line: #3A2F27;
+      --ok: #5CBA85;
+      --err: #F2B8B5;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #17120E;
+    --surface: #241D17;
+    --ink: #F3EAE2;
+    --muted: #A99A8F;
+    --accent: #E8555C;
+    --accent-ink: #1A0E0F;
+    --line: #3A2F27;
+    --ok: #5CBA85;
+    --err: #F2B8B5;
+  }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Archivo", system-ui, sans-serif;
+    line-height: 1.55;
+    margin: 0;
+    padding: 24px 16px 72px;
+  }
+  main { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+  header h1 { font-weight: 800; font-size: 1.7rem; letter-spacing: -0.01em; margin: 0 0 4px; text-wrap: balance; }
+  header h1 .stripe { color: var(--accent); }
+  header p { margin: 0; color: var(--muted); font-size: 0.92rem; max-width: 62ch; }
+  label { font-weight: 600; font-size: 0.95rem; }
+  .hint { color: var(--muted); font-size: 0.85rem; margin: 0; }
+  textarea {
+    width: 100%; box-sizing: border-box; min-height: 140px; resize: vertical;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 6px; padding: 12px;
+    font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.9rem; line-height: 1.5;
+  }
+  textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips button {
+    background: var(--surface); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 999px; padding: 5px 12px; font: 500 0.82rem "Archivo", system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .chips button:focus-visible, #solve:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #solve {
+    background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 6px;
+    padding: 12px 22px; font: 600 1rem "Archivo", system-ui, sans-serif; cursor: pointer;
+    align-self: flex-start;
+  }
+  .input-block { display: flex; flex-direction: column; gap: 10px; }
+  #result { display: flex; flex-direction: column; gap: 10px; }
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  .opts { color: var(--muted); font-size: 0.82rem; display: block; margin-top: 2px; }
+  tfoot td { font-weight: 800; background: var(--surface); }
+  .badge {
+    display: inline-block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em;
+    border: 1px solid var(--line); color: var(--muted); border-radius: 999px;
+    padding: 1px 8px; vertical-align: 1px; margin-left: 6px;
+  }
+  .note { color: var(--muted); font-size: 0.85rem; margin: 0; }
+  .note.good { color: var(--ok); }
+  .error { color: var(--err); font-size: 0.92rem; margin: 0; white-space: pre-wrap; }
+  details { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 0.95rem; }
+  details .menu-list { margin: 10px 0 0; padding: 0; list-style: none; columns: 2; column-gap: 24px; font-size: 0.85rem; }
+  details .menu-list li { break-inside: avoid; display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+  details .menu-list .p { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 540px) { details .menu-list { columns: 1; } }
+  footer { color: var(--muted); font-size: 0.8rem; }
+  footer a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1><span class="stripe">KFC</span> basket optimiser</h1>
+    <p id="provenance"></p>
+  </header>
+
+  <div class="input-block">
+    <label for="wants">What do you want to eat?</label>
+    <p class="hint">One thing per line — <span style="font-family:'IBM Plex Mono',monospace">2x fries</span> style counts work. Bundles, meals and bucket side-choices are searched automatically for the cheapest combination that covers the lot.</p>
+    <textarea id="wants" spellcheck="false" placeholder="6x tender
+2x chicken piece
+4x fries
+regular popcorn chicken
+zinger supercharger tower burger"></textarea>
+    <div class="chips" id="chips" aria-label="Quick add"></div>
+    <button id="solve" type="button">Find cheapest basket</button>
+  </div>
+
+  <div id="result" hidden></div>
+
+  <details>
+    <summary>Full menu (<span id="itemcount"></span> items)</summary>
+    <ul class="menu-list" id="menulist"></ul>
+  </details>
+
+  <footer id="foot"></footer>
+</main>
+
+<script>
+/*__SOLVER_JS__*/
+</script>
+<script>
+  const MENU = /*__MENU_JSON__*/ null;
+
+  const fmt = (pence) => "£" + (pence / 100).toFixed(2);
+  const escHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+  document.getElementById("provenance").textContent =
+    "Live prices captured from " + (MENU.restaurant || "KFC on Just Eat") +
+    " on " + (MENU.fetched_at || "").slice(0, 10) +
+    ". Bucket contents pinned to kfc.co.uk's published compositions.";
+  document.getElementById("foot").innerHTML =
+    "Prices are a snapshot of the captured branch and drift over time. " +
+    "Compositions marked <span class=\"badge\">inferred</span> extend an official sibling size/variant. " +
+    "Exact solver — every basket shown is provably the cheapest cover for your list.";
+
+  const CHIPS = ["tender", "chicken piece", "fries", "hot wing", "gravy",
+                 "popcorn chicken", "zinger burger", "mini fillet", "drink"];
+  const chipsEl = document.getElementById("chips");
+  for (const c of CHIPS) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = "+ " + c;
+    b.addEventListener("click", () => {
+      const ta = document.getElementById("wants");
+      ta.value = (ta.value.trimEnd() ? ta.value.trimEnd() + "\n" : "") + c;
+      ta.focus();
+    });
+    chipsEl.appendChild(b);
+  }
+
+  const menuList = document.getElementById("menulist");
+  const sorted = [...MENU.items].sort((a, b) => a.name.localeCompare(b.name));
+  document.getElementById("itemcount").textContent = sorted.length;
+  menuList.innerHTML = sorted.map((it) =>
+    "<li><span>" + escHtml(it.name) + "</span><span class=\"p\">" +
+    fmt(Math.round(it.price * 100)) + "</span></li>").join("");
+
+  function render(r, wantsLines) {
+    const el = document.getElementById("result");
+    el.hidden = false;
+    if (r.status === "unmatched") {
+      el.innerHTML = "<p class=\"error\">Couldn’t match: " +
+        r.unmatched.map(escHtml).join(", ") +
+        "\nTry different words — the full menu below shows what exists.</p>";
+      return;
+    }
+    if (r.status === "empty") {
+      el.innerHTML = "<p class=\"error\">Add at least one item first.</p>";
+      return;
+    }
+    if (r.status === "too_large") {
+      el.innerHTML = "<p class=\"error\">Those quantities are too large to solve exactly — trim them down.</p>";
+      return;
+    }
+    if (r.status !== "optimal") {
+      el.innerHTML = "<p class=\"error\">No combination of menu items covers that list.</p>";
+      return;
+    }
+    let anyInferred = false;
+    const rows = r.basket.map((b) => {
+      const badge = b.confidence === "inferred"
+        ? (anyInferred = true, " <span class=\"badge\">inferred</span>") : "";
+      const opts = b.opts.length
+        ? "<span class=\"opts\">→ " + b.opts.map(escHtml).join(", ") + "</span>" : "";
+      return "<tr><td class=\"num\">" + b.qty + "×</td><td>" + escHtml(b.name) +
+        badge + opts + "</td><td class=\"num\">" + fmt(b.qty * b.unitPence) + "</td></tr>";
+    }).join("");
+
+    // Untracked freebies worth flagging: drinks and dips supplied beyond asks.
+    const supplied = {};
+    for (const b of r.basket)
+      for (const [k, v] of Object.entries(b.provides))
+        supplied[k] = (supplied[k] || 0) + v * b.qty;
+    const askedComps = new Set(r.groups.flatMap((g) => g.comps));
+    const bonuses = [];
+    for (const key of ["drink", "dip"]) {
+      if (!askedComps.has(key) && supplied[key])
+        bonuses.push(supplied[key] + " " + key + (supplied[key] > 1 ? "s" : ""));
+    }
+
+    el.innerHTML =
+      "<div class=\"tablewrap\"><table>" +
+      "<thead><tr><th class=\"num\">Qty</th><th>Item</th><th class=\"num\">Total</th></tr></thead>" +
+      "<tbody>" + rows + "</tbody>" +
+      "<tfoot><tr><td></td><td>Cheapest possible total</td><td class=\"num\">" +
+      fmt(r.totalPence) + "</td></tr></tfoot></table></div>" +
+      (bonuses.length ? "<p class=\"note good\">Also includes (free with the deals): " +
+        bonuses.join(", ") + ".</p>" : "") +
+      (anyInferred ? "<p class=\"note\">“Inferred” items extend an official sibling composition — check the item on Just Eat if it’s load-bearing.</p>" : "");
+  }
+
+  document.getElementById("solve").addEventListener("click", () => {
+    const lines = document.getElementById("wants").value.split("\n");
+    try { localStorage.setItem("kfc-wants", document.getElementById("wants").value); } catch (e) {}
+    render(solve(MENU, lines), lines);
+  });
+
+  try {
+    const saved = localStorage.getItem("kfc-wants");
+    if (saved) document.getElementById("wants").value = saved;
+  } catch (e) {}
+</script>
