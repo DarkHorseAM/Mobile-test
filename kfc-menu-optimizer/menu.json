@@ -1,0 +1,1742 @@
+{
+  "source": "https://www.just-eat.co.uk/restaurants-kfc-loughton/menu (captured on-device 2026-08-20)",
+  "extracted_from": "captures/kfc-loughton-2026-08-20.json",
+  "fetched_at": "2026-08-20T21:29:21Z",
+  "restaurant": "KFC - Loughton (Just Eat)",
+  "items": [
+    {
+      "id": "0",
+      "name": "Creamy Original Crispy Naan Box Meal",
+      "description": "",
+      "price": 13.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "creamy_original_crispy_naan": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "1",
+      "name": "Tandoori Zinger Crispy Naan Box Meal🔥",
+      "description": "",
+      "price": 13.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tandoori_zinger_crispy_naan": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "2",
+      "name": "Tandoori Loaded Fries",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tandoori_loaded_fries": 1
+      }
+    },
+    {
+      "id": "3",
+      "name": "Tandoori Dipping Feast: 10 PC",
+      "description": "",
+      "price": 31.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 10,
+        "tandoori_dipping_feast": 1
+      }
+    },
+    {
+      "id": "4",
+      "name": "Sticky BBQ Drip’d Bites",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "sticky_bbq_drip_d_bites": 1
+      }
+    },
+    {
+      "id": "5",
+      "name": "Sticky BBQ Drip’d Wings",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "sticky_bbq_drip_d_wings": 1
+      }
+    },
+    {
+      "id": "6",
+      "name": "3 Dips Bundle",
+      "description": "",
+      "price": 2.5,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "3_dips_bundle": 1
+      }
+    },
+    {
+      "id": "7",
+      "name": "Strawberry Shortcake Iced Matcha",
+      "description": "",
+      "price": 5.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "strawberry_shortcake_iced_matcha": 1
+      }
+    },
+    {
+      "id": "8",
+      "name": "Delivery Deal - 20 Hot Wings Bucket🔥",
+      "description": "",
+      "price": 15.0,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "hot_wing": 20
+      }
+    },
+    {
+      "id": "9",
+      "name": "Boneless Banquet",
+      "description": "",
+      "price": 12.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "boneless_banquet": 1
+      }
+    },
+    {
+      "id": "10",
+      "name": "Mighty Bucket For One Meal",
+      "description": "",
+      "price": 11.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "mighty_bucket_for_one": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "11",
+      "name": "Trilogy Box Meal",
+      "description": "",
+      "price": 13.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "trilogy": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "12",
+      "name": "Tenders Meal: 4 pc",
+      "description": "",
+      "price": 10.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 4,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "13",
+      "name": "Hot Wings Meal: 10 pc 🔥",
+      "description": "",
+      "price": 11.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "hot_wing": 10,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "14",
+      "name": "Fillet Burger Meal",
+      "description": "",
+      "price": 9.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "fillet_burger": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "15",
+      "name": "Zinger Burger Meal 🔥",
+      "description": "",
+      "price": 9.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_burger": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "16",
+      "name": "Fillet Tower Box Meal",
+      "description": "",
+      "price": 13.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "fillet_tower": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "17",
+      "name": "Zinger Supercharger Tower Box Meal",
+      "description": "",
+      "price": 13.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_supercharger_tower": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "18",
+      "name": "Oatly Strawberry Shortcake Iced Matcha",
+      "description": "",
+      "price": 5.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "oatly_strawberry_shortcake_iced_matcha": 1
+      }
+    },
+    {
+      "id": "19",
+      "name": "Vanilla Iced Matcha",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "vanilla_iced_matcha": 1
+      }
+    },
+    {
+      "id": "20",
+      "name": "Oatly Vanilla Iced Matcha",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "oatly_vanilla_iced_matcha": 1
+      }
+    },
+    {
+      "id": "21",
+      "name": "Caramel Krunch Shake",
+      "description": "",
+      "price": 4.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "caramel_krunch_shake": 1
+      }
+    },
+    {
+      "id": "22",
+      "name": "Chocolate Krunch Shake",
+      "description": "",
+      "price": 4.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chocolate_krunch_shake": 1
+      }
+    },
+    {
+      "id": "23",
+      "name": "Strawberry Shortcake Krunch Shake",
+      "description": "",
+      "price": 4.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "strawberry_shortcake_krunch_shake": 1
+      }
+    },
+    {
+      "id": "24",
+      "name": "Iced Latte",
+      "description": "",
+      "price": 3.29,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "iced_latte": 1
+      }
+    },
+    {
+      "id": "25",
+      "name": "Oatly Iced Latte",
+      "description": "",
+      "price": 3.29,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "oatly_iced_latte": 1
+      }
+    },
+    {
+      "id": "26",
+      "name": "Iced Caramel Latte",
+      "description": "",
+      "price": 4.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "iced_caramel_latte": 1
+      }
+    },
+    {
+      "id": "27",
+      "name": "Oatly Iced Caramel Latte",
+      "description": "",
+      "price": 4.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "oatly_iced_caramel_latte": 1
+      }
+    },
+    {
+      "id": "28",
+      "name": "Iced Vanilla Latte",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "iced_vanilla_latte": 1
+      }
+    },
+    {
+      "id": "29",
+      "name": "Oatly Iced Vanilla Latte",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "oatly_iced_vanilla_latte": 1
+      }
+    },
+    {
+      "id": "30",
+      "name": "Iced Tiramisu Latte",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "iced_tiramisu_latte": 1
+      }
+    },
+    {
+      "id": "31",
+      "name": "Oatly Iced Tiramisu Latte",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "oatly_iced_tiramisu_latte": 1
+      }
+    },
+    {
+      "id": "32",
+      "name": "Sparkling Cloudy Lemonade",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "sparkling_cloudy_lemonade": 1
+      }
+    },
+    {
+      "id": "33",
+      "name": "Sparkling Raspberry Lemonade",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "sparkling_raspberry_lemonade": 1
+      }
+    },
+    {
+      "id": "34",
+      "name": "Cherry Boba Refresher",
+      "description": "",
+      "price": 3.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "cherry_boba_refresher": 1
+      }
+    },
+    {
+      "id": "35",
+      "name": "Strawberry Boba Refresher",
+      "description": "",
+      "price": 3.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "strawberry_boba_refresher": 1
+      }
+    },
+    {
+      "id": "36",
+      "name": "Tandoori Dipping Feast: 14 PC",
+      "description": "",
+      "price": 35.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 14,
+        "tandoori_dipping_feast": 1
+      }
+    },
+    {
+      "id": "37",
+      "name": "Tenders Bargain Bucket: 6 pc",
+      "description": "",
+      "price": 19.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 6,
+        "tenders_bargain_bucket": 1
+      }
+    },
+    {
+      "id": "38",
+      "name": "Bargain Bucket: 6 pc",
+      "description": "",
+      "price": 19.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 6,
+        "bargain_bucket": 1
+      }
+    },
+    {
+      "id": "39",
+      "name": "Tenders Bargain Bucket: 10 pc",
+      "description": "",
+      "price": 25.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 10,
+        "tenders_bargain_bucket": 1
+      }
+    },
+    {
+      "id": "40",
+      "name": "Bargain Bucket: 10 pc",
+      "description": "",
+      "price": 25.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 10,
+        "bargain_bucket": 1
+      }
+    },
+    {
+      "id": "41",
+      "name": "Tenders Bargain Bucket: 14 pc",
+      "description": "",
+      "price": 31.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 14,
+        "tenders_bargain_bucket": 1
+      }
+    },
+    {
+      "id": "42",
+      "name": "Bargain Bucket: 14 pc",
+      "description": "",
+      "price": 31.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 14,
+        "bargain_bucket": 1
+      }
+    },
+    {
+      "id": "43",
+      "name": "Tenders Family Feast: 6 pc",
+      "description": "",
+      "price": 24.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 6,
+        "tenders_family_feast": 1
+      }
+    },
+    {
+      "id": "44",
+      "name": "Family Feast: 6 pc",
+      "description": "",
+      "price": 24.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 6,
+        "family_feast": 1
+      }
+    },
+    {
+      "id": "45",
+      "name": "Tenders Family Feast: 10 pc",
+      "description": "",
+      "price": 30.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 10,
+        "tenders_family_feast": 1
+      }
+    },
+    {
+      "id": "46",
+      "name": "Family Feast: 10 pc",
+      "description": "",
+      "price": 30.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 10,
+        "family_feast": 1
+      }
+    },
+    {
+      "id": "47",
+      "name": "Wicked Variety Bucket: 6 pc",
+      "description": "",
+      "price": 25.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 6,
+        "wicked_variety_bucket": 1
+      }
+    },
+    {
+      "id": "48",
+      "name": "Wicked Variety Bucket: 10 pc",
+      "description": "",
+      "price": 31.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 10,
+        "wicked_variety_bucket": 1
+      }
+    },
+    {
+      "id": "49",
+      "name": "Wicked Variety Bucket: 14 PC",
+      "description": "",
+      "price": 37.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 14,
+        "wicked_variety_bucket": 1
+      }
+    },
+    {
+      "id": "50",
+      "name": "Tenders Dipping Feast: 10 PC",
+      "description": "",
+      "price": 32.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 10,
+        "tenders_dipping_feast": 1
+      }
+    },
+    {
+      "id": "51",
+      "name": "Tenders Dipping Feast: 14 PC",
+      "description": "",
+      "price": 36.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 14,
+        "tenders_dipping_feast": 1
+      }
+    },
+    {
+      "id": "52",
+      "name": "Party Bucket: 6 PC",
+      "description": "",
+      "price": 35.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 6,
+        "party_bucket": 1
+      }
+    },
+    {
+      "id": "53",
+      "name": "Party Bucket: 10 PC",
+      "description": "",
+      "price": 42.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 10,
+        "party_bucket": 1
+      }
+    },
+    {
+      "id": "54",
+      "name": "Party Bucket: 14 PC",
+      "description": "",
+      "price": 49.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 14,
+        "party_bucket": 1
+      }
+    },
+    {
+      "id": "55",
+      "name": "Zinger Stacker Box Meal 🔥",
+      "description": "",
+      "price": 14.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_stacker": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "56",
+      "name": "BBQ Fillet Tower Box Meal",
+      "description": "",
+      "price": 13.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "bbq_fillet_tower": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "57",
+      "name": "Fillet Box Meal",
+      "description": "",
+      "price": 12.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "fillet": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "58",
+      "name": "Zinger Box Meal",
+      "description": "",
+      "price": 12.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "59",
+      "name": "Tenders Box Meal",
+      "description": "",
+      "price": 12.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tenders": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "60",
+      "name": "Colonel's Box Meal",
+      "description": "",
+      "price": 11.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "colonel_s": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "61",
+      "name": "Popcorn Chicken Box Meal",
+      "description": "",
+      "price": 11.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "popcorn_chicken": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "62",
+      "name": "Hot Wings Box Meal🔥",
+      "description": "",
+      "price": 13.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "hot_wings": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "63",
+      "name": "Twister Wrap Box Meal with 1 Tender",
+      "description": "",
+      "price": 12.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "twister_wrap": 1,
+        "tender": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "64",
+      "name": "Creamy Original Crispy Naan Meal",
+      "description": "",
+      "price": 10.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "creamy_original_crispy_naan": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "65",
+      "name": "Tandoori Zinger Crispy Naan Meal🔥",
+      "description": "",
+      "price": 10.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tandoori_zinger_crispy_naan": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "66",
+      "name": "Creamy Original Crispy Naan",
+      "description": "",
+      "price": 8.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "creamy_original_crispy_naan": 1
+      }
+    },
+    {
+      "id": "67",
+      "name": "Tandoori Zinger Crispy Naan🔥",
+      "description": "",
+      "price": 8.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tandoori_zinger_crispy_naan": 1
+      }
+    },
+    {
+      "id": "68",
+      "name": "BBQ Fillet Tower Burger Meal",
+      "description": "",
+      "price": 10.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "bbq_fillet_tower_burger": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "69",
+      "name": "Zinger Supercharger Tower Burger Meal 🔥",
+      "description": "",
+      "price": 10.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_supercharger_tower_burger": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "70",
+      "name": "Fillet Tower Burger Meal",
+      "description": "",
+      "price": 10.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "fillet_tower_burger": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "71",
+      "name": "Zinger Stacker Meal 🔥",
+      "description": "",
+      "price": 11.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_stacker": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "72",
+      "name": "BBQ Fillet Tower Burger",
+      "description": "",
+      "price": 8.29,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "bbq_fillet_tower_burger": 1
+      }
+    },
+    {
+      "id": "73",
+      "name": "Zinger Supercharger Tower Burger 🔥",
+      "description": "",
+      "price": 8.29,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_supercharger_tower_burger": 1
+      }
+    },
+    {
+      "id": "74",
+      "name": "Fillet Tower Burger",
+      "description": "",
+      "price": 8.29,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "fillet_tower_burger": 1
+      }
+    },
+    {
+      "id": "75",
+      "name": "Fillet Burger",
+      "description": "",
+      "price": 7.79,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "fillet_burger": 1
+      }
+    },
+    {
+      "id": "76",
+      "name": "Zinger Burger 🔥",
+      "description": "",
+      "price": 7.79,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_burger": 1
+      }
+    },
+    {
+      "id": "77",
+      "name": "Zinger Stacker 🔥",
+      "description": "",
+      "price": 8.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_stacker": 1
+      }
+    },
+    {
+      "id": "78",
+      "name": "Tenders Meal: 3 pc",
+      "description": "",
+      "price": 9.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 3,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "79",
+      "name": "Colonel's Meal: 4 pc",
+      "description": "",
+      "price": 10.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 4,
+        "colonel_s": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "80",
+      "name": "Colonel's Meal: 3 pc",
+      "description": "",
+      "price": 10.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 3,
+        "colonel_s": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "81",
+      "name": "Colonel's Meal: 2 pc",
+      "description": "",
+      "price": 8.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 2,
+        "colonel_s": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "82",
+      "name": "Large Popcorn Chicken Meal",
+      "description": "",
+      "price": 10.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_popcorn_chicken": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "83",
+      "name": "Regular Popcorn Chicken Meal",
+      "description": "",
+      "price": 8.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_popcorn_chicken": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "84",
+      "name": "Hot Wings Meal: 6 pc 🔥",
+      "description": "",
+      "price": 10.79,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "hot_wing": 6,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "85",
+      "name": "Vegan Burger 🌱",
+      "description": "",
+      "price": 7.29,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "vegan_burger": 1
+      }
+    },
+    {
+      "id": "86",
+      "name": "Vegan Burger with a Drink 🌱",
+      "description": "",
+      "price": 8.29,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "vegan_burger": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "87",
+      "name": "Popcorn Chicken Snack Box",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "popcorn_chicken_snack_box": 1
+      }
+    },
+    {
+      "id": "88",
+      "name": "Original Recipe Chicken Snack Box",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 1,
+        "original_recipe_chicken_snack_box": 1
+      }
+    },
+    {
+      "id": "89",
+      "name": "Tender Snack Box",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender_snack_box": 1
+      }
+    },
+    {
+      "id": "90",
+      "name": "Mini Burger",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "mini_burger": 1
+      }
+    },
+    {
+      "id": "91",
+      "name": "BBQ Mini Wrap",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "bbq_mini_wrap": 1
+      }
+    },
+    {
+      "id": "92",
+      "name": "Flamin' Mini Wrap",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "flamin_mini_wrap": 1
+      }
+    },
+    {
+      "id": "93",
+      "name": "Twister Wrap",
+      "description": "",
+      "price": 6.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "twister_wrap": 1
+      }
+    },
+    {
+      "id": "94",
+      "name": "Twister Wrap Meal",
+      "description": "",
+      "price": 9.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "twister_wrap": 1,
+        "regular_signature_fries": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "95",
+      "name": "Original Ranch Rice Bowl",
+      "description": "",
+      "price": 8.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "original_ranch_rice_bowl": 1
+      }
+    },
+    {
+      "id": "96",
+      "name": "Original Ranch Rice Bowl & Drink",
+      "description": "",
+      "price": 9.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "original_ranch_rice_bowl": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "97",
+      "name": "Original Ranch Fillet Rice Bowl with Extra Fillet",
+      "description": "",
+      "price": 10.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "original_ranch_fillet_rice_bowl_with_extra_fillet": 1
+      }
+    },
+    {
+      "id": "98",
+      "name": "Original Ranch Rice Bowl with Extra Fillet & Drink",
+      "description": "",
+      "price": 11.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "original_ranch_rice_bowl_with_extra_fillet": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "99",
+      "name": "Zinger Ranch Rice Bowl 🔥",
+      "description": "",
+      "price": 8.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_ranch_rice_bowl": 1
+      }
+    },
+    {
+      "id": "100",
+      "name": "Zinger Ranch Rice Bowl & Drink 🔥",
+      "description": "",
+      "price": 9.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_ranch_rice_bowl": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "102",
+      "name": "Tender",
+      "description": "",
+      "price": 2.79,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tender": 1
+      }
+    },
+    {
+      "id": "103",
+      "name": "Hot Wings: 2 pc 🔥",
+      "description": "",
+      "price": 2.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "hot_wing": 2
+      }
+    },
+    {
+      "id": "104",
+      "name": "Hot Wings: 12 PC 🔥",
+      "description": "",
+      "price": 12.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "hot_wing": 12
+      }
+    },
+    {
+      "id": "105",
+      "name": "Large Popcorn Chicken",
+      "description": "",
+      "price": 8.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_popcorn_chicken": 1
+      }
+    },
+    {
+      "id": "106",
+      "name": "Dirty Loaded Fries",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "dirty_loaded_fries": 1
+      }
+    },
+    {
+      "id": "107",
+      "name": "Regular Signature Fries",
+      "description": "",
+      "price": 3.19,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_signature_fries": 1
+      }
+    },
+    {
+      "id": "108",
+      "name": "Large Signature Fries",
+      "description": "",
+      "price": 4.19,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_signature_fries": 1
+      }
+    },
+    {
+      "id": "109",
+      "name": "Regular Gravy",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_gravy": 1
+      }
+    },
+    {
+      "id": "110",
+      "name": "Large Gravy",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_gravy": 1
+      }
+    },
+    {
+      "id": "111",
+      "name": "Regular Beans",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_beans": 1
+      }
+    },
+    {
+      "id": "112",
+      "name": "Large Beans",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_beans": 1
+      }
+    },
+    {
+      "id": "113",
+      "name": "Corn Cob: 1 pc",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "corn_cob": 1
+      }
+    },
+    {
+      "id": "114",
+      "name": "Corn Cob: 2 pc",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "corn_cob": 2
+      }
+    },
+    {
+      "id": "115",
+      "name": "Regular Coleslaw",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_coleslaw": 1
+      }
+    },
+    {
+      "id": "116",
+      "name": "Large Coleslaw",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_coleslaw": 1
+      }
+    },
+    {
+      "id": "117",
+      "name": "Chocolate Chip Cookie",
+      "description": "",
+      "price": 2.69,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chocolate_chip_cookie": 1
+      }
+    },
+    {
+      "id": "118",
+      "name": "Kids' Box: Kids' Burger",
+      "description": "",
+      "price": 5.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "kids_box_kids_burger": 1
+      }
+    },
+    {
+      "id": "119",
+      "name": "Kids' Box: Tender",
+      "description": "",
+      "price": 5.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "kids_box_tender": 1
+      }
+    },
+    {
+      "id": "120",
+      "name": "Kids' Box: Popcorn Chicken",
+      "description": "",
+      "price": 5.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "kids_box_popcorn_chicken": 1
+      }
+    },
+    {
+      "id": "121",
+      "name": "Zinger Ranch Rice Bowl with Extra Zinger Fillet🔥",
+      "description": "",
+      "price": 10.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_ranch_rice_bowl_with_extra_zinger_fillet": 1
+      }
+    },
+    {
+      "id": "122",
+      "name": "Zinger Ranch Rice Bowl with Extra Zinger Fillet & Drink 🔥",
+      "description": "",
+      "price": 11.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "zinger_ranch_rice_bowl_with_extra_zinger_fillet": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "123",
+      "name": "Original Ranch Veggie Rice Bowl",
+      "description": "",
+      "price": 8.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "original_ranch_veggie_rice_bowl": 1
+      }
+    },
+    {
+      "id": "124",
+      "name": "Original Ranch Veggie Rice Bowl & Drink",
+      "description": "",
+      "price": 9.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "original_ranch_veggie_rice_bowl": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "125",
+      "name": "Regular Popcorn Chicken",
+      "description": "",
+      "price": 6.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_popcorn_chicken": 1
+      }
+    },
+    {
+      "id": "126",
+      "name": "Sweet Chilli Drip’d Bites",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "sweet_chilli_drip_d_bites": 1
+      }
+    },
+    {
+      "id": "127",
+      "name": "Original Recipe Chicken: 1 pc",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 1
+      }
+    },
+    {
+      "id": "128",
+      "name": "Original Recipe Chicken: 2 pc",
+      "description": "",
+      "price": 4.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "chicken_piece": 2
+      }
+    },
+    {
+      "id": "129",
+      "name": "Regular Creamy Mash",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_creamy_mash": 1
+      }
+    },
+    {
+      "id": "130",
+      "name": "Large Creamy Mash",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_creamy_mash": 1
+      }
+    },
+    {
+      "id": "131",
+      "name": "Regular Cajun Rice",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_cajun_rice": 1
+      }
+    },
+    {
+      "id": "132",
+      "name": "Large Cajun Rice",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_cajun_rice": 1
+      }
+    },
+    {
+      "id": "133",
+      "name": "Regular Side Salad",
+      "description": "",
+      "price": 2.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "regular_side_salad": 1
+      }
+    },
+    {
+      "id": "134",
+      "name": "Large Side Salad",
+      "description": "",
+      "price": 3.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "large_side_salad": 1
+      }
+    },
+    {
+      "id": "135",
+      "name": "Original Sauce",
+      "description": "",
+      "price": 0.95,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "original_sauce": 1
+      }
+    },
+    {
+      "id": "136",
+      "name": "Supercharger Dip",
+      "description": "",
+      "price": 0.95,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "supercharger_dip": 1
+      }
+    },
+    {
+      "id": "137",
+      "name": "Texas BBQ Dip",
+      "description": "",
+      "price": 0.95,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "texas_bbq_dip": 1
+      }
+    },
+    {
+      "id": "138",
+      "name": "Jalapeño Ranch",
+      "description": "",
+      "price": 0.95,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "jalapeo_ranch": 1
+      }
+    },
+    {
+      "id": "139",
+      "name": "Sweet Teriyaki Dip",
+      "description": "",
+      "price": 0.95,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "sweet_teriyaki_dip": 1
+      }
+    },
+    {
+      "id": "140",
+      "name": "Mango Masala Dip",
+      "description": "",
+      "price": 0.95,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "mango_masala_dip": 1
+      }
+    },
+    {
+      "id": "141",
+      "name": "Pepsi MAX Can",
+      "description": "",
+      "price": 1.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "pepsi_max_can": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "142",
+      "name": "Tango Orange 330ml Can",
+      "description": "",
+      "price": 1.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tango_orange_330ml_can": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "143",
+      "name": "7UP Free Can",
+      "description": "",
+      "price": 1.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "7up_free_can": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "144",
+      "name": "Still Water 500ml",
+      "description": "",
+      "price": 1.99,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "still_water_500ml": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "145",
+      "name": "Pepsi MAX 1.5 L Bottle",
+      "description": "",
+      "price": 3.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "pepsi_max_1_5_l_bottle": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "146",
+      "name": "Diet Pepsi 1.5 L Bottle",
+      "description": "",
+      "price": 3.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "diet_pepsi_1_5_l_bottle": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "147",
+      "name": "Tango Orange 1.5L Bottle",
+      "description": "",
+      "price": 3.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "tango_orange_1_5l_bottle": 1,
+        "drink": 1
+      }
+    },
+    {
+      "id": "148",
+      "name": "7UP Free 1.5 L Bottle",
+      "description": "",
+      "price": 3.49,
+      "category": "",
+      "modifier_groups": [],
+      "provides": {
+        "7up_free_1_5_l_bottle": 1,
+        "drink": 1
+      }
+    }
+  ],
+  "modifier_groups": []
+}

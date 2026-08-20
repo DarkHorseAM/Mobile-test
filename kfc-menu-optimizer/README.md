@@ -1,4 +1,25 @@
-# KFC Halifax (Just Eat) menu optimiser
+# KFC (Just Eat) menu optimiser
+
+**Live data**: `menu.json` holds 148 real items and prices captured on-device
+from the Just Eat menu page on 2026-08-20 (raw capture in `captures/`). Note
+the capture came from the **KFC Loughton** branch — Just Eat switched branch
+by delivery address; Halifax prices may differ slightly. The menu is loaded
+into the page by XHR after render (it is NOT in `__NEXT_DATA__` or any inline
+script), so it was captured with a DOM-collector bookmarklet run on a phone,
+then normalised by `fetch_menu.py --json-file` and enriched by
+`derive_provides.py`, which encodes only what item names state (": N pc"
+counts, Meal = +fries +drink, cans/bottles = drink). Bucket fries/sides are
+deliberately NOT encoded, so bucket-heavy baskets may show slightly worse
+than reality.
+
+Rebuild from a fresh capture:
+
+```bash
+python3 fetch_menu.py --json-file captures/<capture>.json --out menu.json
+python3 derive_provides.py menu.json
+python3 optimize.py --menu menu.json "zinger burger" "2x fries" gravy drink
+```
+
 
 Two parts:
 
