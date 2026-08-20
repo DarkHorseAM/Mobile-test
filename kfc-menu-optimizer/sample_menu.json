@@ -1,0 +1,205 @@
+{
+  "source": "SAMPLE DATA — live fetch of https://www.just-eat.co.uk/restaurants-kfc-halifax/menu was blocked by the sandbox network policy; prices are representative, not live",
+  "extracted_from": "sample",
+  "fetched_at": "2026-08-20T00:00:00Z",
+  "restaurant": "KFC - Halifax (Just Eat) [SAMPLE]",
+  "items": [
+    {
+      "id": "orig-1pc",
+      "name": "1 Piece Original Recipe Chicken",
+      "description": "One piece of Original Recipe chicken",
+      "price": 2.49,
+      "category": "Chicken",
+      "modifier_groups": [],
+      "provides": {"chicken_piece": 1}
+    },
+    {
+      "id": "orig-2pc",
+      "name": "2 Pieces Original Recipe Chicken",
+      "description": "Two pieces of Original Recipe chicken",
+      "price": 4.49,
+      "category": "Chicken",
+      "modifier_groups": [],
+      "provides": {"chicken_piece": 2}
+    },
+    {
+      "id": "mini-fillet",
+      "name": "Mini Fillet",
+      "description": "One 100% chicken breast mini fillet",
+      "price": 2.29,
+      "category": "Chicken",
+      "modifier_groups": [],
+      "provides": {"mini_fillet": 1}
+    },
+    {
+      "id": "hot-wing",
+      "name": "Hot Wing",
+      "description": "One Hot Wing",
+      "price": 1.19,
+      "category": "Chicken",
+      "modifier_groups": [],
+      "provides": {"hot_wing": 1}
+    },
+    {
+      "id": "zinger-burger",
+      "name": "Zinger Burger",
+      "description": "Zinger fillet burger with lettuce and mayo",
+      "price": 5.99,
+      "category": "Burgers",
+      "modifier_groups": [],
+      "provides": {"zinger_burger": 1}
+    },
+    {
+      "id": "zinger-meal",
+      "name": "Zinger Burger Meal",
+      "description": "Zinger Burger, regular fries and a drink",
+      "price": 8.49,
+      "category": "Burger Meals",
+      "modifier_groups": ["drink-choice"],
+      "provides": {"zinger_burger": 1, "regular_fries": 1}
+    },
+    {
+      "id": "fillet-burger",
+      "name": "Fillet Burger",
+      "description": "Original Recipe fillet burger",
+      "price": 5.79,
+      "category": "Burgers",
+      "modifier_groups": [],
+      "provides": {"fillet_burger": 1}
+    },
+    {
+      "id": "fillet-meal",
+      "name": "Fillet Burger Meal",
+      "description": "Fillet Burger, regular fries and a drink",
+      "price": 8.29,
+      "category": "Burger Meals",
+      "modifier_groups": ["drink-choice"],
+      "provides": {"fillet_burger": 1, "regular_fries": 1}
+    },
+    {
+      "id": "reg-fries",
+      "name": "Regular Fries",
+      "description": "Regular portion of fries",
+      "price": 2.29,
+      "category": "Sides",
+      "modifier_groups": [],
+      "provides": {"regular_fries": 1}
+    },
+    {
+      "id": "large-fries",
+      "name": "Large Fries",
+      "description": "Large portion of fries (counts as ~1.5 regular)",
+      "price": 2.99,
+      "category": "Sides",
+      "modifier_groups": [],
+      "provides": {"regular_fries": 1}
+    },
+    {
+      "id": "reg-gravy",
+      "name": "Regular Gravy",
+      "description": "Regular pot of gravy",
+      "price": 1.79,
+      "category": "Sides",
+      "modifier_groups": [],
+      "provides": {"gravy": 1}
+    },
+    {
+      "id": "reg-popcorn",
+      "name": "Regular Popcorn Chicken",
+      "description": "Regular popcorn chicken",
+      "price": 4.29,
+      "category": "Sides",
+      "modifier_groups": [],
+      "provides": {"popcorn_chicken": 1}
+    },
+    {
+      "id": "6pc-bargain-bucket",
+      "name": "6 Piece Bargain Bucket",
+      "description": "6 pieces of Original Recipe chicken, 4 regular fries",
+      "price": 16.99,
+      "category": "Buckets",
+      "modifier_groups": [],
+      "provides": {"chicken_piece": 6, "regular_fries": 4}
+    },
+    {
+      "id": "10pc-bargain-bucket",
+      "name": "10 Piece Bargain Bucket",
+      "description": "10 pieces of Original Recipe chicken, 4 regular fries",
+      "price": 21.99,
+      "category": "Buckets",
+      "modifier_groups": [],
+      "provides": {"chicken_piece": 10, "regular_fries": 4}
+    },
+    {
+      "id": "party-bucket",
+      "name": "Party Bucket",
+      "description": "10 pieces of chicken, 8 mini fillets, 8 hot wings, regular popcorn chicken, 6 regular fries, 2 large sides",
+      "price": 29.99,
+      "category": "Buckets",
+      "modifier_groups": ["large-side-choice"],
+      "provides": {"chicken_piece": 10, "mini_fillet": 8, "hot_wing": 8, "popcorn_chicken": 1, "regular_fries": 6}
+    },
+    {
+      "id": "boneless-banquet",
+      "name": "Boneless Banquet",
+      "description": "3 mini fillets, popcorn chicken, regular fries, a side and a drink",
+      "price": 9.49,
+      "category": "Box Meals",
+      "modifier_groups": ["drink-choice", "side-choice"],
+      "provides": {"mini_fillet": 3, "popcorn_chicken": 1, "regular_fries": 1}
+    },
+    {
+      "id": "wow-box",
+      "name": "Wow Box Meal",
+      "description": "Mini fillet burger, 1 piece of chicken, regular fries, regular side and a drink",
+      "price": 8.99,
+      "category": "Box Meals",
+      "modifier_groups": ["drink-choice", "side-choice"],
+      "provides": {"mini_fillet_burger": 1, "chicken_piece": 1, "regular_fries": 1}
+    },
+    {
+      "id": "pepsi-can",
+      "name": "Pepsi Max Can",
+      "description": "330ml can",
+      "price": 1.49,
+      "category": "Drinks",
+      "modifier_groups": [],
+      "provides": {"drink": 1}
+    }
+  ],
+  "modifier_groups": [
+    {
+      "id": "drink-choice",
+      "name": "Choose your drink",
+      "min": 1,
+      "max": 1,
+      "options": [
+        {"id": "opt-pepsi", "name": "Pepsi Max", "price_delta": 0.0, "provides": {"drink": 1}},
+        {"id": "opt-tango", "name": "Tango Orange", "price_delta": 0.0, "provides": {"drink": 1}},
+        {"id": "opt-lg-pepsi", "name": "Large Pepsi Max", "price_delta": 0.7, "provides": {"drink": 1}}
+      ]
+    },
+    {
+      "id": "side-choice",
+      "name": "Choose your side",
+      "min": 1,
+      "max": 1,
+      "options": [
+        {"id": "opt-side-fries", "name": "Regular Fries", "price_delta": 0.0, "provides": {"regular_fries": 1}},
+        {"id": "opt-side-gravy", "name": "Regular Gravy", "price_delta": 0.0, "provides": {"gravy": 1}},
+        {"id": "opt-side-beans", "name": "Regular Beans", "price_delta": 0.0, "provides": {"beans": 1}}
+      ]
+    },
+    {
+      "id": "large-side-choice",
+      "name": "Choose 2 large sides",
+      "min": 2,
+      "max": 2,
+      "options": [
+        {"id": "opt-lgside-fries", "name": "Large Fries", "price_delta": 0.0, "provides": {"regular_fries": 1}},
+        {"id": "opt-lgside-gravy", "name": "Large Gravy", "price_delta": 0.0, "provides": {"gravy": 1}},
+        {"id": "opt-lgside-beans", "name": "Large Beans", "price_delta": 0.0, "provides": {"beans": 1}}
+      ]
+    }
+  ]
+}
