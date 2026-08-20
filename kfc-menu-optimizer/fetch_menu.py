@@ -281,6 +281,12 @@ def main() -> int:
     ap.add_argument("--out", default="menu.json")
     ap.add_argument("--chromium", default=None,
                     help="Path to a Chromium binary for the Playwright fallback")
+    ap.add_argument("--html-file", default=None,
+                    help="Skip fetching: extract from a saved copy of the page HTML "
+                         "(e.g. captured on a phone via view-source / save-page)")
+    ap.add_argument("--json-file", default=None,
+                    help="Skip fetching: normalise a saved JSON payload "
+                         "(e.g. __NEXT_DATA__ copied via bookmarklet, or a menu XHR body)")
     args = ap.parse_args()
 
     out = Path(args.out)
@@ -288,7 +294,21 @@ def main() -> int:
 
     payloads: list[tuple[str, object]] = []
 
-    html = fetch_html(args.url)
+    if args.json_file:
+        payloads = [(args.json_file, json.loads(Path(args.json_file).read_text()))]
+        menu = normalise(payloads, args.url)
+        if menu is None:
+            print("[fetch] no menu items found in the supplied JSON", file=sys.stderr)
+            return 1
+        out.write_text(json.dumps(menu, indent=2))
+        print(f"[fetch] wrote {len(menu['items'])} items and "
+              f"{len(menu['modifier_groups'])} modifier groups to {out}")
+        return 0
+
+    if args.html_file:
+        html = Path(args.html_file).read_text()
+    else:
+        html = fetch_html(args.url)
     if html:
         payloads = extract_inline_json(html)
         if payloads:
@@ -297,6 +317,10 @@ def main() -> int:
             print("[fetch] no parseable inline script data found in HTML")
 
     menu = normalise(payloads, args.url) if payloads else None
+
+    if menu is None and args.html_file:
+        print("[fetch] no menu data found in the supplied HTML file", file=sys.stderr)
+        return 1
 
     if menu is None:
         print("[fetch] falling back to Playwright XHR capture...")

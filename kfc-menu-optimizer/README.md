@@ -8,6 +8,28 @@ Two parts:
    of wanted items, returns the cheapest combination of purchasable menu items
    (including bundles/meals and their modifier options) covering the list.
 
+## Findings from live probing (2026-08-20)
+
+With egress to the Just Eat domains enabled, probing from this (datacenter)
+environment established:
+
+- Every `*.just-eat.co.uk` host is behind Cloudflare bot protection that
+  hard-blocks datacenter IPs — curl gets an "Attention Required" 403 and even
+  real Chromium via Playwright gets `ERR_CONNECTION_RESET`. From residential
+  IPs (a phone/home connection) the pages load normally, so `fetch_menu.py`
+  works as designed when run from a normal connection.
+- The API domain `uk.api.just-eat.io` is NOT blocked. Unauthenticated:
+  `GET /discovery/uk/restaurants/enriched/bypostcode/{POSTCODE}` →
+  restaurant listing; KFC Halifax is id `70112`, uniqueName `kfc-halifax`
+  (81 Haley Hill, HX3 6ED).
+- `GET /restaurants/uk/kfc-halifax/menu` exists but returns
+  `401 Authentication required` — it wants a bearer token from Just Eat's
+  app auth flow, so it isn't usable anonymously.
+- If fetching from a machine that can't pass Cloudflare, capture the page on
+  a phone instead and feed it in: `--html-file page.html` (saved page /
+  view-source copy) or `--json-file next_data.json` (the `__NEXT_DATA__`
+  blob or a menu XHR body) — both skip all network access.
+
 ## Important: network access
 
 The sandbox this was developed in **blocks all egress to
